@@ -1,0 +1,284 @@
+:root{
+    --bg-neutral: #F8F8FB;
+    --primary-c: #4B7BEC;
+    --secondary-c: #707070;
+    --shadow-c:#A6BEF6;
+
+    --light-text-c: #707070;
+
+    --error-c: #ee5253;
+}
+
+html, body {
+    background-color: var(--bg-neutral);
+    color : var(--light-text-c);
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-size: 13px;
+}
+
+a {
+    text-decoration: none;    
+    color: var(--light-text-c);
+}
+
+th {
+    font-weight: normal;
+}
+
+table {
+    border-color: unset;
+    padding: 10px;
+}
+
+tbody {
+    display: block;
+    overflow: auto;
+    height: 500px;
+    width: 100%;
+  }
+  
+  thead tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+  }
+  
+  thead, tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+  }
+
+input, select {
+    border: 1px solid var(--secondary-c);
+    border-radius: 4px;
+    padding: 0;
+}
+
+input:focus {
+    outline: none;
+    box-shadow: 1px 3px 4px 1px var(--shadow-c);
+    border: 1px solid var(--primary-c);
+}
+
+.main-feed {
+    border: 1px solid var(--primary-c);
+    border-radius: 5px;
+}
+
+.main-title-header, .main-title-header-modal {
+    margin: 20px 20px 10px 20px;
+    font-size: 18px;
+    color: var(--primary-c);
+}
+
+.main-title-divider {
+    width: 95%;
+    border-bottom: 1px solid var(--primary-c);
+    margin: auto;
+    margin-bottom: 10px;
+    box-shadow: 1px 3px 4px 1px var(--shadow-c);
+}
+
+app-root {
+    display: flex;
+}
+
+app-main-user-interface, app-forms, app-client {
+    height: calc(100vh - 60px);
+}
+
+.loader {
+    border: 5px solid var(--shadow-c);
+    border-radius: 50%;
+    border-top: 5px solid var(--primary-c);
+    width: 50%;
+    height: 50%;
+    -webkit-animation: spin 2s linear infinite; /* Safari */
+    animation: spin 2s linear infinite;
+  }
+  
+  /* Safari */
+  @-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  /* width */
+::-webkit-scrollbar {
+    width: 4px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background:var(--shadow-c); 
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-c); 
+  }
+
+  textarea {
+    resize: none;
+  }
+
+  .maincontainer {
+    margin: 0px 10px;
+    width: calc(100vw - 100px);
+}
+
+.form-input {
+  width: 290px;
+  font-size: 17px;
+  height: 35px;
+  margin-top: 3px;
+}
+
+.form-select {
+  width: 250px;
+  font-size: 17px;
+  height: 35px;
+  margin-top: 3px;
+}
+
+.sys-loader {
+  height: 54px;
+  width: 54px;
+  margin: auto;
+}
+
+.empty-field {
+  border: 1px solid var(--error-c);
+}
+
+#bookkeeping-proceed {
+  display: none;
+  position: absolute;
+  z-index: 1;
+  width: 35vw;
+  height: 25vh;
+  background-color: var(--bg-neutral);
+  border: 1px solid var(--primary-c);
+  border-radius: 5px;
+  top: 55%;
+  left: 50%;
+  -ms-transform: translateX(-50%) translateY(-50%);
+  -webkit-transform: translate(-50%,-50%);
+  transform: translate(-50%,-50%);
+}
+
+.modal-control {
+  text-align: center;
+}
+
+button {
+  border: 1px solid var(--primary-c);
+  border-radius: 5px;
+  height: 40px;
+  color: var(--primary-c);
+  background-color: var(--bg-neutral);
+}
+
+.modal-container {
+  height: 100%;
+}
+
+.modal-content-container {
+  height: 27%;
+  padding: 2px 25px;
+}
+
+.modal-control button {
+  width: 100px;
+  margin: 0px 10px;
+}
+
+.autocomplete-container .input-container input {
+  padding: 0px 30px 0px 5px !important;
+}
+
+.form-input.i-override {
+  width: 250px !important;
+  /* border: 1px solid var(--secondary-c); */
+  border-radius: 4px;
+}
+
+#tb-input-description > .autocomplete-container > .input-container > input, 
+#tb-input-businessname > .autocomplete-container > .input-container > input {
+  border: 1px solid var(--secondary-c);
+  width: 290px;
+  height: 35px;
+}
+
+.autocomplete-container {
+  box-shadow: none !important;
+}
+
+.autocomplete-container .input-container .x {
+  right: -30px !important;
+}
+
+.modal-content-container.client-modal {
+  display: flex;
+  padding: 0px;
+}
+
+.modal {
+  display: none;
+  position: absolute;
+  z-index: 1;
+  background-color: var(--bg-neutral);
+  border: 1px solid var(--primary-c);
+  border-radius: 5px;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translateX(-50%) translateY(-50%);
+  -webkit-transform: translate(-50%,-50%);
+  transform: translate(-50%,-50%);
+  }
+
+.modal-backdrop {
+  display: none;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  background: black;
+  opacity: 0.3;
+  overflow: hidden;
+  top: 0px;
+  left: 0px;
+}
+
+.form-input.i-override {
+  width: 250px !important;
+  /* border: 1px solid var(--secondary-c); */
+  border-radius: 4px;
+}
+
+#profile-taxpayer-rdo > .autocomplete-container > .input-container > input {
+  height: 35px;
+}
+
+.form-input.i-override-taxfiling {
+  width: 290px !important;
+  margin-top: 10px;
+}
+
+.autocomplete-container .input-container input {
+  border: 1px solid var(--secondary-c) !important;
+}
+
+.i-override.auth > .ng-autocomplete > .autocomplete-container .suggestions-container ul {
+  max-height: 140px !important;
+}

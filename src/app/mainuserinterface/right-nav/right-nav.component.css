@@ -1,0 +1,49 @@
+.main-right-container {
+    border: 1px solid var(--primary-c);
+    border-radius: 5px;
+    width: 195px;
+    margin-bottom: 10px;
+}
+
+.date-time-component-time {
+    font-size: 30px;
+}
+
+.date-time-component {
+    padding: 10px 15px;
+}
+
+.tax-filing-modify-btn, .forms-modify-btn {
+    display: flex;
+    flex-direction: column;
+}
+
+.tax-filing-modify-btn > button,
+.forms-modify-btn > button {
+    margin: 3px 0px;
+}
+
+button.tax-filing-modify-btn-btn, .forms-modify-btn-btn {
+    border: 1px solid var(--primary-c);
+    border-radius: 5px;
+    height: 40px;
+    color: var(--primary-c);
+    background-color: var(--bg-neutral);
+}
+
+.sys-loader.datetime {
+    height: 54px;
+    width: 54px;
+    margin: auto;
+}
+
+.notes-component {
+    margin: 12px;
+    border: none;
+    background: var(--bg-neutral);
+}
+
+.notes-component:focus {
+    border: none;
+    outline:none;
+}

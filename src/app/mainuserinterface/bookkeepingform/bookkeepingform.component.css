@@ -1,0 +1,69 @@
+.main-feed.trialbalance {
+    margin: 0px;
+    padding: 20px 20px 10px 20px;
+}
+
+.main-title-header {
+    margin: 0;
+}
+
+.main-title-trialbalance-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.main-trialbalance-fill-form {
+    display: grid;
+    grid-template-columns: auto auto auto;
+}
+
+.trialbalance-fill-form {
+    margin: 5px 0px;
+}
+
+.trialbalance-fill-form.tb-businessname {
+    grid-column: 1 / span 2;
+}
+
+#tb-input-businessname {
+    width: 550px;
+}
+
+.trialbalance-table-th tr th:nth-child(1) {
+    text-align: left;
+}
+
+.trialbalance-table-th tr th:nth-child(2), .trialbalance-table-th tr th:nth-child(3), 
+.trialbalance-table-th tr th:nth-child(4){
+    text-align: right;
+}
+
+.trialbalance-table-td tr td:nth-child(2), .trialbalance-table-td tr td:nth-child(3),
+.trialbalance-table-td tr td:nth-child(4) {
+    text-align: right;
+}
+
+.trialbalance-table-td {
+    height: calc(100vh - 480px);
+}
+
+.main-trialbalance-total {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.main-trialbalance-total div {
+    margin: 7px;
+}
+
+.trialbalance-form.total {
+    width: 189px;
+}
+
+.datalogVal.selected {
+    background-color: var(--shadow-c);
+}
+
+.datalogVal {
+    cursor: pointer;
+}

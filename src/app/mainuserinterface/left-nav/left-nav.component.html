@@ -1,0 +1,67 @@
+<div class="main-navigation-control-container">
+    <div class="main-navigation-handle">
+        <!-- <div class="main-navigation-control-user">
+            <div class="control-img"></div>
+            <div class="control-user" *ngIf="clientAuthorize == null">Initializing...</div>
+            <div class="control-user" *ngIf="clientAuthorize !== null">{{clientAuthorize.fullName}}</div>
+        </div>
+        <div class="main-navigation-control-navigation">
+            <div class="control-navlist">
+                <a routerLink="/dashboard"class="control-nav dashboard" [routerLinkActive]="['is-active']" (click)="dashboardChecker($event)">Dashboard</a>
+                <a routerLink="/bookkeeping/bookkeepingform" class="control-nav bookkeeping" [routerLinkActive]="['is-active']" (click)="dashboardChecker($event)">Bookkeeping</a>
+                <a routerLink="/taxfiling" class="control-nav taxfiling" [routerLinkActive]="['is-active']" (click)="dashboardChecker($event)">Tax Filing</a>
+                <a class="control-nav settings" [routerLinkActive]="['is-active']">Settings</a>
+                <a class="control-nav help" [routerLinkActive]="['is-active']">Help</a>
+                <a routerLink="/" class="control-nav logout">Logout</a>
+            </div>
+        </div> -->
+        <div class="sidebar-nav account">
+            <div class="sidebar-nav-icon">
+                <i class="fas fa-user-alt"></i>
+            </div>
+            <div class="sidebar-nav-title">
+                <span>{{nameInitial}}</span>
+            </div>
+        </div>
+        <div class="sidebar-nav active">
+            <div class="sidebar-nav-icon">
+                <i class="fas fa-home"></i>
+            </div>
+            <div class="sidebar-nav-title">
+                <span>Home</span>
+            </div>
+        </div>
+        <div class="sidebar-nav">
+            <div class="sidebar-nav-icon">
+                <i class="fas fa-calendar-alt"></i>
+            </div>
+            <div class="sidebar-nav-title">
+                <span>Agenda</span>
+            </div>
+        </div>
+        <div class="sidebar-nav">
+            <div class="sidebar-nav-icon">
+                <i class="fas fa-sticky-note"></i>
+            </div>
+            <div class="sidebar-nav-title">
+                <span>Notes</span>
+            </div>
+        </div>
+        <div class="sidebar-nav">
+            <div class="sidebar-nav-icon">
+                <i class="fas fa-cogs"></i>
+            </div>
+            <div class="sidebar-nav-title">
+                <span>Settings</span>
+            </div>
+        </div>
+        <div class="sidebar-nav" routerLink="/">
+            <div class="sidebar-nav-icon">
+                <i class="fas fa-sign-out-alt"></i>
+            </div>
+            <div class="sidebar-nav-title">
+                <span>Logout</span>
+            </div>
+        </div>
+    </div>
+  </div>

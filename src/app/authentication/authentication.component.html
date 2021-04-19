@@ -1,0 +1,217 @@
+<div class="main-login-container" *ngIf="isLogin">
+    <div class="main-login-content main-feed">
+        <div class="main-login-form field username">
+            <span class="login-label-username">Username</span>
+            <input type="text" id="username-input-login" class="main-login-input" (click)="onFieldChecker($event)" ng-model="inputfield" required/>
+        </div>
+        <div class="main-login-form field password">
+            <span class="login-label-password">Password</span>
+            <input type="password" id="password-input-login" class="main-login-input" (click)="onFieldChecker($event)" ng-model="inputfield" required/>
+            <div class="showPasswordTrigger" (click)="showPassword($event)"><i *ngIf="showPass" class="fas fa-eye"></i><i *ngIf="!showPass" class="fas fa-eye-slash"></i></div>
+        </div>
+        <div class="main-login-form submit">
+            <div class="login-submit label btn" (click)="onLoginChecker()">Login</div>
+        </div>
+        <div class="main-login-form register">
+            <div class="login-register label" (click)="onOpenCreateAccount()">Register</div>
+        </div>
+    </div>
+</div>
+
+<div [hidden]="!isRegister">
+    <div class="main-registration-container-tracking">
+        <div class="main-personal information" [ngClass]="{'active' : pg1}">
+            <span>Personal Details</span>
+        </div>
+        <div class="main-personal identification" [ngClass]="{'active' : pg2}">
+            <span>Identification</span>
+        </div>
+    </div>
+</div>
+<div class="main-login-container" [hidden]="!isRegister">
+    <div class="registration-Container-page" [hidden]="!pg1">
+        <div class="main-login-content main-feed registration">
+            <div class="main-login-form field fullname">
+                <span class="login-label-fn">Full Name</span>
+                <input type="text" id="fn-input" class="main-login-input" (click)="onFieldChecker($event)" ng-model="inputfield" required/>
+            </div>
+            <div class="main-login-form field email">
+                <span class="login-label-email">Email</span>
+                <input type="email" pattern="/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/" id="email-input" class="main-login-input" (click)="onFieldChecker($event)" ng-model="inputfield" required/>
+            </div>
+            <div class="main-login-form field username">
+                <span class="reg-label-username">Username</span>
+                <input type="text" id="username-input" class="main-login-input" (click)="onFieldChecker($event)" [(ngModel)]="availableUsername" required disabled/>
+            </div>
+            <div class="main-login-form field password">
+                <span class="reg-label-password">Password</span>
+                <input type="password" id="password-input" class="main-login-input" (click)="onFieldChecker($event)" ng-model="inputfield" required/>
+                <div class="showPasswordTrigger" (click)="showPassword($event)"><i *ngIf="showPass" class="fas fa-eye"></i><i *ngIf="!showPass" class="fas fa-eye-slash"></i></div>
+            </div>
+            <div class="main-login-form field single">
+                <span class="login-label-single">Civil Status</span>
+                <select id="maritalStatus-input" class="main-login-input">
+                    <option value="single">Single</option>
+                    <option value="married">Married</option>
+                  </select>
+            </div>
+            <div class="main-login-form field birthdate">
+                <span class="login-label-birthdate">Birth Date</span>
+                <input type="date" id="birthdate-input" class="main-login-input" (click)="onFieldChecker($event)" ng-model="inputfield" required/>
+            </div>
+            <div class="main-login-form field fullname">
+                <span class="login-label-citizenship">Citizenship</span>
+                <input type="text" id="citizenship-input" class="main-login-input" (click)="onFieldChecker($event)" ng-model="inputfield" required/>
+            </div>
+            <div class="main-login-form field rdo">
+                <span class="login-label-rdo">RDO Code</span>
+                <!-- <input type="text" id="rdo-input" class="main-login-input" (click)="onFieldChecker($event)" ng-model="inputfield" required/> -->
+                <div class="ng-autocomplete form-input i-override auth" >
+                    <ng-autocomplete 
+                        [data]="rdolist"
+                        [searchKeyword]="rdoName"
+                        (selected)='selectRDOList($event)'
+                        (inputChanged)='onChangeSearch($event)'
+                        (inputFocused)='onFocused($event)'
+                        [itemTemplate]="itemTemplateRdoList"
+                        [notFoundTemplate]="notFoundTemplateRdoList" id="rdo-input">                                 
+                    </ng-autocomplete>
+
+                    <ng-template #itemTemplateRdoList let-item>
+                        <a [innerHTML]="item.RDO"></a>
+                        </ng-template>
+
+                        <ng-template #notFoundTemplateRdoList let-notFound>
+                            <div [innerHTML]="notFound"></div>
+                            </ng-template>
+                </div>
+            </div>
+            <!-- <div class="main-login-form field username">
+                <span class="reg-label-spfn">Spouse Full Name</span>
+                <input type="text" id="spfn-input" class="main-login-input" (click)="onFieldChecker($event)" ng-model="inputfield" required/>
+            </div>
+            <div class="main-login-form field username">
+                <span class="reg-label-spbirthdate">Spouse Birth date</span>
+                <input type="date" id="spbirthdate-input" class="main-login-input" (click)="onFieldChecker($event)" ng-model="inputfield" required/>
+            </div> -->
+        </div>
+        <div class="main-login-form register">
+            <div class="login-register label" (click)="onOpenLogin()">Login</div>
+            <div class="login-register label" (click)="onRegisterChecker()">Next</div>
+        </div>
+    </div>
+
+    <div class="registration-Container-page" [hidden]="pg1">
+        <div class="main-login-content main-feed registration">
+            <div class="main-login-form field bnname">
+                <span class="login-label-bnname">Business Name</span>
+                <input type="text" id="bnname-input" class="main-login-input" (click)="onFieldChecker($event)" ng-model="inputfield" required/>
+            </div>
+            <div class="main-login-form field bnaddress">
+                <span class="login-label-bnaddress">Business Address</span>
+                <input type="text" id="bnaddress-input" class="main-login-input" (click)="onFieldChecker($event)" ng-model="inputfield" required/>
+            </div>
+            <div class="main-login-form field industry">
+                <span class="login-label-industry">Business Industry</span>
+                <select id="businessindustry-input" class="main-login-input">
+                    <option value="Aerospace">Aerospace</option>
+                    <option value="Agriculture">Agriculture </option>
+                    <option value="Computer">Computer - Information Technology</option>
+                    <option value="Education">Education</option>
+                    <option value="Electronics">Electronics</option>
+                    <option value="Energy">Energy</option>
+                    <option value="Entertainment">Entertainment</option>
+                    <option value="Food">Food</option>
+                    <option value="Healthcare">Healthcare</option>
+                    <option value="Hospitality">Hospitality</option>
+                    <option value="Manufacturing">Manufacturing</option>
+                    <option value="Mining">Mining</option>
+                    <option value="Telecommunication">Telecommunication</option>
+                    <option value="Transport">Transport</option>
+                    <option value="Food">Food</option>
+                  </select>
+            </div>
+            <div class="main-login-form field rdo">
+                <span class="login-label-rdo">RDO</span>
+                <!-- <input type="text" id="rdo-input" class="main-login-input" (click)="onFieldChecker($event)" ng-model="inputfield" required/> -->
+                <div class="ng-autocomplete form-input i-override" >
+                    <ng-autocomplete 
+                        [data]="rdolist"
+                        [searchKeyword]="rdoName"
+                        (selected)='selectRDOList($event)'
+                        (inputChanged)='onChangeSearch($event)'
+                        (inputFocused)='onFocused($event)'
+                        [itemTemplate]="itemTemplateRdoList"
+                        [notFoundTemplate]="notFoundTemplateRdoList" id="rdo-input">                                 
+                    </ng-autocomplete>
+
+                    <ng-template #itemTemplateRdoList let-item>
+                        <a [innerHTML]="item.RDO"></a>
+                        </ng-template>
+
+                        <ng-template #notFoundTemplateRdoList let-notFound>
+                            <div [innerHTML]="notFound"></div>
+                            </ng-template>
+                </div>
+            </div>
+            <div class="main-login-form field sss">
+                <span class="login-label-sss">SSS Number</span>
+                <input type="text" id="sss-input" class="main-login-input" (click)="onFieldChecker($event)" ng-model="inputfield" required/>
+            </div>
+            <div class="main-login-form field tin">
+                <span class="login-label-tin">TIN Number</span>
+                <input type="text" id="tin-input" class="main-login-input" (click)="onFieldChecker($event)" ng-model="inputfield" required/>
+            </div>
+            <div class="main-login-form field idtype">
+                <span class="login-label-idtype">ID Type</span>
+                <select id="idtype-input" class="main-login-input">
+                    <option value="passport">Philippine Passport</option>
+                    <option value="driverlicense">Driver’s license </option>
+                    <option value="umid">UMID Card</option>
+                    <option value="philHealth">PhilHealth ID</option>
+                    <option value="postal">Postal ID</option>
+                    <option value="voter">Voter’s ID</option>
+                    <option value="prcid">Professional Regulation Commission ID</option>
+                  </select>           
+                </div>
+            <div class="main-login-form field idnum">
+                <span class="login-label-idnum">ID Number</span>
+                <input type="text" id="idnum-input" class="main-login-input" (click)="onFieldChecker($event)" ng-model="inputfield" required/>
+            </div>
+            <div class="taxFilingBtnWrapper uploadtaxform">
+                Upload Document
+                <input id="register-file" class="fileInput hidden" type="file" accept="image/jpeg,image/png,application/pdf" name="file3"/>
+            </div>
+            <div class="main-login-form oneline tac">
+                <input type="checkbox" id="tac-input" class="main-login-check" name="terms1">
+                <label for="terms1">I read and agree with the terms and conditions.</label><br>
+            </div>
+        </div>
+        <div class="main-login-form register">
+            <div class="login-register label" (click)="onOpenLogin()">Login</div>
+            <div class="login-register label" >Next</div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-backdrop"></div>
+<div id="authentication-save-modal" class="modal">
+    <div class="modal-container">
+        <div class="modal-header main-title-header">
+            <div class="modal-title-inner">Authentication</div>
+        </div>
+        <div class="modal-divider main-title-divider"></div>
+        <div class="modal-content-container">
+            <div class="authentication-save-container">
+                <div class="authentication-save-label">Username</div>
+                <div class="authentication-save-value">{{authorizedUsername}}</div>
+                <div class="authentication-save-label">Password</div>
+                <div class="authentication-save-value">{{authorizedPassword}}</div>
+                <div class="showPasswordTriggerAuth" (click)="triggerPassword($event)"><i *ngIf="showPass" class="fas fa-eye"></i><i *ngIf="!showPass" class="fas fa-eye-slash"></i></div>
+                <div class="authentication-save-buttons">
+                    <button (click)="savedAuthentication()">Procceed</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

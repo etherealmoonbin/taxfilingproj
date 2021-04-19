@@ -1,0 +1,36 @@
+#main-container-forms {
+    display: flex;
+    height: 100%;
+}
+
+.main-container-mid {
+    display: flex;
+    flex-direction: column;
+}
+
+.forms-top-nav {
+    display: flex;
+    margin-bottom: 15px;
+    justify-content: center;
+}
+
+.forms-nav {
+    margin: 0px 10px;
+    cursor: pointer;
+}
+
+.forms-nav-subnav-cat {
+    display: flex;
+    margin-bottom: 15px;
+    justify-content: center;
+}
+
+.forms-nav-subnav {
+    margin: 0px 10px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.active-nav {
+    border-bottom: 1px solid var(--primary-c);
+}

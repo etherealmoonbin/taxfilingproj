@@ -1,0 +1,28 @@
+.bottom-nav-container {
+    display: flex;
+    justify-content: center;
+}
+
+.bottom-nav {
+    display: flex;
+    justify-content: space-between;
+    position: fixed;
+    bottom: 0;
+    background-color: var(--primary-c);
+    color: var(--bg-neutral);
+    border-radius: 5px 5px 0px 0px;
+    padding: 0px 20px;
+    padding-top: 3px;
+    width: 90%;
+    height: 20px;
+}
+
+.bottom-nav-datetime {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.bottom-nav-datetime > div, .bottom-nav-notification > div {
+    margin: 0px 10px;
+    font-size: 14px;
+}

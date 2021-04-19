@@ -1,0 +1,107 @@
+<div class="main-feed trialbalance">
+    <div class="main-title-trialbalance-container">
+        <div class="main-title-header">Bookkeeping</div>
+        <div class="main-title-date">As of {{date}}</div>
+    </div>
+    <div class="main-title-divider"></div>
+    <div class="main-trialbalance-container">
+        <div class="main-trialbalance-fill-form">
+            <div class="trialbalance-fill-form tb-businessname">
+                <div class="main-feed-tb description">
+                    <div class="main-tb-label">Business Name</div>
+                    <input type="text" id="tb-input-businessname" class="form-input trialbalance-form" />
+                </div>
+            </div>
+            <div class="trialbalance-fill-form tb-selectjournal">
+                <div class="main-tb-label selectjournal">Period</div>
+                <select class="form-input trialbalance-form" id="tb-input-period">
+                    <option value="daily">Daily</option>
+                    <option value="monthly">Monthly</option>
+                    <option value="quarterly">Quarterly</option>
+                    <option value="annually">Annually</option>
+                </select>
+            </div>
+            <div class="trialbalance-fill-form tb-selectjournal">
+                <div class="main-tb-label selectjournal">Select Journal</div>
+                <select class="form-input trialbalance-form" id="tb-input-selectjournal">
+                    <option value="purchase">Purchase</option>
+                    <option value="sales">Sales</option>
+                    <option value="cashReceipts">Cash Receipts</option>
+                    <option value="CashPaymentDisbursement">Cash Payment/Disbursement</option>
+                    <option value="purchaseReturn">Purchase Return</option>
+                    <option value="salesReturn">Sales Return</option>
+                    <option value="general">General</option>
+                </select>
+            </div>
+            <div class="main-login-form field birthdate">
+                <div class="main-tb-label date">Date</div>
+                <input class="form-input trialbalance-form" id="tb-input-date" type="date">
+            </div>
+            <div class="trialbalance-fill-form tb-typeofentry">
+                <div class="main-tb-label typeofentry">Type of Entry</div>
+                <select class="form-input trialbalance-form" id="tb-input-typeofentry">
+                    <option value="transaction">Transaction</option>
+                    <option value="adjusting">Adjusting</option>
+                    <option value="closing">Closing</option>
+                </select>
+            </div>
+            <div class="trialbalance-fill-form tb-description">
+                <div class="main-feed-tb description">
+                    <div class="main-tb-label">Description</div>
+                    <input type="text" id="tb-input-description" class="form-input trialbalance-form" />
+                </div>
+            </div>
+            <div class="trialbalance-fill-form tb-debit">
+                <div class="main-feed-tb description">
+                    <div class="main-tb-label">Debit</div>
+                    <input type="number" id="tb-input-debit" class="form-input trialbalance-form" value="0.00">
+                </div>
+            </div>
+            <div class="trialbalance-fill-form tb-credit">
+                <div class="main-feed-tb description">
+                    <div class="main-tb-label">Credit</div>
+                    <input type="number" id="tb-input-credit" class="form-input trialbalance-form" value="0.00">
+                </div>
+            </div>
+        </div>
+        <div class="main-trialbalance-table">
+            <table>
+                <thead class="main-feed-th trialbalance-table-th">
+                    <tr>
+                        <th>Description</th>
+                        <th>Date</th>
+                        <th>Debit</th>
+                        <th>Credit</th>
+                    </tr>
+                </thead>
+                <tbody class="main-feed-td trialbalance-table-td">
+                    <div *ngFor="let datalog of trialbalance; trackBy: trackItem" >
+                    <tr class="datalogVal" [attr.data-log-no]=datalog.no (click)="getSelectedTableRow($event)">
+                            <td>{{datalog.description}}</td>
+                            <td>{{datalog.date}}</td>
+                            <td>{{datalog.debit}}</td>
+                            <td>{{datalog.credit}}</td>
+                    </tr>
+                </div>
+                    <tr *ngIf="trialbalance.length == 0 || trialbalance == undefined">
+                        <td style="font-style: italic;">New Data</td>
+                        <td></td>
+                        <td style="font-style: italic;">0.00</td>
+                        <td style="font-style: italic;">0.00</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="main-trialbalance-total">
+            <div class="main-feed-tb total">
+                <div class="main-tb-label">Total</div>
+            </div>
+            <div class="main-feed-tb description">
+                <input type="number" id="tb-total-debit" class="form-input trialbalance-form total" readonly>
+            </div>
+            <div class="main-feed-tb description">
+                <input type="number" id="tb-total-credit" class="form-input trialbalance-form total" readonly>
+            </div>
+        </div>
+    </div>
+</div>

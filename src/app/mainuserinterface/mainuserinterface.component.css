@@ -1,0 +1,737 @@
+#main-container {
+    display: flex;
+    height: 95vh;
+}
+
+#main-hero-nav {
+    border: 1px solid var(--primary-c);
+    border-radius: 5px;
+}
+
+.main-feed.feed {
+    /* height: calc(100% - 320px); */
+}
+
+.main-feed.transaction {
+    border: 1px solid var(--primary-c);
+    border-radius: 5px;
+    height: 100%;
+}
+
+.main-feed-feed-table > table > tr > th {
+    font-size: 15px;
+}
+
+.main-feed-feed-table > table > tr > th:nth-child(1),
+.main-feed-feed-table > table > tr > td:nth-child(1){
+    width: 150px;
+}
+
+.main-feed-feed-table > table > tr > th:nth-child(2),
+.main-feed-feed-table > table > tr > td:nth-child(2){
+    width: 100px;
+}
+
+.main-feed-feed-table > table > tr > th:nth-child(3),
+.main-feed-feed-table > table > tr > td:nth-child(3){
+    width: 400px;
+}
+
+.main-feed-feed-table > table > tr > th:nth-child(4),
+.main-feed-feed-table > table > tr > td:nth-child(4){
+    width: 300px;
+}
+
+.main-feed-feed-table > table > tr > td:nth-child(1),
+.main-feed-feed-table > table > tr > td:nth-child(2),
+.main-feed-feed-table > table > tr > td:nth-child(3),
+.main-feed-feed-table > table > tr > td:nth-child(4) {
+    padding-left: 40px;
+}
+
+.main-feed-td {
+    width: 100%;
+    height: 32.6vh;
+    overflow-y: auto;
+}
+
+.main-feed-btn {
+    border: 1px solid var(--primary-c);
+    border-radius: 5px;
+    width: 250px;
+    margin: 10px 0px;
+    padding: 13px 0px;
+    text-align: center;
+}
+
+.main-feed-lower {
+    display: flex;
+}
+
+.main-feed-lower-r {
+    /* margin: 10px 0px 10px 15px; */
+    width: 100%;
+}
+
+.main-feed-feed-table table thead tr th:nth-child(1) {
+    width: 37%;
+    text-align: left;
+    padding-left: 10px;
+}
+
+.main-feed-feed-table table thead tr th:nth-child(2) {
+    width: 35%;
+}
+
+.main-feed-feed-table table thead tr th:nth-child(3) {
+    width: 20%;
+}
+
+.main-feed-feed-table table tbody tr td {
+    padding-left: 10px;
+    width: 328px;
+}
+
+.sys-loader.mainlog {
+    margin-top: 14vh;
+}
+
+.main-feed.trialbalance {
+
+}
+
+.main-title-header {
+
+}
+
+.main-trialbalance-container {
+    padding: 20px 20px 10px 20px;
+}
+
+.main-title-trialbalance-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.main-trialbalance-fill-form {
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+}
+
+.trialbalance-fill-form {
+    margin: 5px 0px;
+}
+
+.trialbalance-fill-form.tb-businessname {
+
+}
+
+#tb-input-businessname {
+
+}
+
+.trialbalance-table-th tr th:nth-child(1) {
+    text-align: left;
+}
+
+.trialbalance-table-th tr th:nth-child(2), .trialbalance-table-th tr th:nth-child(3), 
+.trialbalance-table-th tr th:nth-child(4){
+    text-align: right;
+}
+
+.trialbalance-table-td tr td:nth-child(2), .trialbalance-table-td tr td:nth-child(3),
+.trialbalance-table-td tr td:nth-child(4) {
+    text-align: right;
+}
+
+.trialbalance-table-td {
+    height: calc(100vh - 469px);
+}
+
+.main-trialbalance-total {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.main-trialbalance-total div {
+    margin: 7px;
+}
+
+.trialbalance-form.total {
+    width: 189px;
+}
+
+.datalogVal.selected {
+    background-color: var(--shadow-c);
+}
+
+.datalogVal {
+    cursor: pointer;
+}
+
+button.trialbalance-modify-btn-btn {
+    width: 115px;
+    margin: 8px 10px;
+    height: 30px;
+}
+
+.trialbalance-modify-btn.modify-btns-form {
+    text-align: center;
+}
+
+.main-feed-dashboard-navigation {
+    display: flex;
+}
+
+.main-feed-dashboard-navigation > div {
+    width: 20vw;
+    border: 1px solid var(--primary-c);
+    border-radius: 5px 5px 0px 0px;
+    border-bottom: none;
+    height: 35px;
+    margin: 3px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.home-navigation.active {
+    border-bottom: 4px solid var(--primary-c) !important;
+    color: var(--primary-c);
+}
+
+#main-container-taxfiling {
+    display: flex;
+}
+
+.main-tax-filing-buttons {
+    height: calc(100vh - 213px);
+    overflow: auto;
+}
+
+.taxfiling-link-desc {
+    font-size: 12px;
+}
+
+.main-tax-filing-title {
+    font-size: 15px;
+    border-bottom: 1px solid var(--primary-c);
+    padding: 10px;
+    text-align: center;
+}
+
+.tax-filing-downloadable-forms {
+    margin: 10px;
+    border: 1px solid var(--primary-c);
+    border-radius: 5px;
+    padding: 5px;
+    width: 30vh;
+    overflow: hidden;
+}
+
+.main-tax-filing-content {
+    width: 73vw;
+    border: 1px solid var(--primary-c);
+    border-radius: 5px;
+    margin: 10px 10px 10px 0px;
+}
+
+.taxFilingBtnWrapper {
+    margin: 5px 4px;
+    padding: 10px 5px;
+    font-size: 14px;
+}
+
+.taxFilingBtnWrapper:hover {
+    background-color: var(--shadow-c);
+    cursor: pointer;
+}
+
+.taxFilingBtnWrapper > a {
+    font-weight: bold;
+}
+
+.taxFilingBtnWrapper > a:hover {
+    color: var(--primary-c);
+}
+
+.fileInput {
+    cursor: pointer;
+    height: 100%;
+    position:absolute;
+    top: 0;
+    right: 0;
+    /*This makes the button huge so that it can be clicked on*/
+}
+.hidden {
+    /*Opacity settings for all browsers*/
+    opacity: 0;
+    -moz-opacity: 0;
+    filter:progid:DXImageTransform.Microsoft.Alpha(opacity=0)
+}
+
+.main-tax-filing-container {
+    height: calc(100vh - 145px);
+    display: flex;
+}
+
+.tax-filing-container-profile {
+    padding: 10px 25px;
+    margin: auto;
+}
+
+.tax-filing-container-profile-item {
+    margin: 10px 0px;
+}
+
+.tax-filing-container-profile-sub-label {
+    font-size: 10px;
+}
+
+.tax-filing-container-profile-label {
+    margin-bottom: 5px;
+}
+
+label.tax-filing-container-profile-item-label {
+    font-size: 16px;
+    margin: 0px 5px;
+}
+
+.tax-filing-container-profile-inner-container {
+    grid-template-columns: repeat(2, auto);
+    display: grid;
+    grid-gap: 20px;
+}
+
+#profile-taxpayer-rdo > .autocomplete-container > .input-container > input {
+    height: 35px;
+}
+
+.tax-filing-container-profile-header {
+    font-size: 21px;
+    text-align: center;
+}
+
+#main-container-reports {
+    display: flex;
+}
+
+.dropdown-header.report, #taxpayerProfile-list, #taxpayerProfile-dashboard-list {
+    border: none;
+    font-size: 18px;
+    color: var(--primary-c);
+    width: 100%;
+    background-color: var(--bg-neutral);
+}
+
+.main-feed.report{
+
+}
+
+.main-feed.report > .main-title-header {
+    margin-top: 10px;
+}
+
+.main-feed.innerfeed {
+    margin: 5px 0px;
+    height: 300px;
+    width: 100%;
+}
+
+.main-feed.innerfeed.balanceSheetInnerfeed {
+    grid-column: 1 / span 2;
+    width: 100%;
+}
+
+.main-feed.innerfeed:nth-child(2), .main-feed.innerfeed:nth-child(3) {
+    height: 230px;
+}
+
+.main-feed.innerfeed:nth-child(2) > .main-report-container-inner, .main-feed.innerfeed:nth-child(3) > .main-report-container-inner {
+    height: 60%;
+}
+
+.main-report-container {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-gap: 0px 12px;
+    margin: 0px 20px;
+}
+
+.main-report-container-inner {
+    overflow: auto;
+    height: 70%;
+    padding: 0px 15px;
+}
+
+.report-asset-description {
+    width: 55%;
+}
+
+.report-asset-type {
+    display: flex;
+    font-size: 13px;
+}
+
+.report-asset-debit, .report-asset-credit {
+    width: 22%;
+}
+
+.report-asset-type > div {
+    padding: 0px 5px;
+}
+
+.report-asset-record {
+    margin: 10px 0px;
+}
+
+.report-balancesheet-total, .report-cashflow-total, .report-incomestatement-total {
+    display: flex;
+    padding: 0px 15px;
+}
+
+.report-balancesheet-total-txt, .report-incomestatement-total-txt {
+    width: 55%;
+}
+
+.report-balancesheet-debit-txt, .report-balancesheet-credit-txt{
+    width: 22%;
+}
+
+.report-asset-title {
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.report-incomestatement-revenue-total, .report-cashflow-total {
+    display: flex;
+}
+
+.report-incomestatement-revenue-total-txt {
+    width: 55%;
+    font-size: 13px;
+}
+
+.report-cashflow-total-txt { 
+    width: 350px;
+    font-size: 13px;
+}
+
+.report-cashflow-price-total-txt, .report-cashflow-value-txt {
+    font-size: 13px;
+}
+
+.main-title-header.reports-selector {
+    display: flex;
+}
+
+select#report-businessname-category {
+    width: 70vw;
+}
+
+select#report-businessnametimestamp-category {
+    width: 15vw;
+}
+
+.tax-filing-form-fill-up {
+    display: grid;
+    grid-template-columns: repeat(2, 48%);
+    grid-gap: 40px;
+    padding: 10px;
+    overflow: auto;
+}
+
+.tax-filing-input-field {
+    text-align: center;
+    margin: auto;
+}
+
+.navigation-buttons-btn, .navigation-buttons-btn-finish-taxpayer-profile {
+    border-radius: 5px;
+    border: 1px solid var(--primary-c);
+    padding: 10px 0px;
+    width: 100px;
+    height: 15px;
+    text-align: center;
+    font-size: 14px;
+    margin: 0px 5px;
+}
+
+.navigation-buttons-btn.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.navigation-buttons {
+    position: absolute;
+    bottom: 66px;
+    cursor: pointer;
+    display: flex;
+}
+
+.tax-filing-input-field:nth-child(1), .tax-filing-input-field.dropdown-header.taxfiling {
+    grid-column: 1 / span 2;
+}
+
+.taxpayer-profile-finish-button {
+    grid-column: 2 / span 1;
+}
+
+.tax-filing-input-title-title {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.tax-filing-inner-main-container {
+    height: 54vh;
+    overflow: auto;
+}
+
+.tax-filing-form-fill-up.bir-0605, .tax-filing-form-fill-up.bir-0611-A, .tax-filing-form-fill-up.bir-0613 {
+    grid-template-columns: repeat(2, auto);
+}
+
+.pg-1-span-2 {
+    grid-column: 1 / span 2;
+}
+
+.tax-filing-input-title {
+    margin-bottom: 5px;
+}
+
+.tax-filing-information-details {
+    display: flex;
+    justify-content: center;
+}
+
+.tax-filing-warning {
+    margin: 0px 6px;
+    text-align: center;
+}
+
+.warning-icon {
+    margin-top: 2px;
+}
+
+.form-drop.tax-filing-drop {
+    width: 290px;
+    height: 35px;
+}
+
+.summary-output {
+    font-weight: bold;
+}
+
+.bir-1601-FQ.mod-pg-1 > .tax-filing-input-field:nth-child(1),
+.bir-1602Q.mod-pg-1 > .tax-filing-input-field:nth-child(1) {
+    grid-column: 1 / span 3;
+}
+
+.tax-filing-form-fill-up.bir-1601-FQ.mod-pg-1,
+.tax-filing-form-fill-up.bir-1602Q.mod-pg-1 {
+    grid-template-columns: repeat(3, auto);
+}
+
+.main-feed-onGetStarted {
+    height: 49vh;
+}
+
+.main-feed-onGetStarted {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.tax-filing-container-profile-item-taxpayer-type-inner {
+    display: flex;
+    margin-top: 19px;
+}
+
+.onGetStarted-content.header {
+    font-size: 26px;
+    margin-bottom: 17px;
+}
+
+.onGetStarted-content.btn-trigger {
+    background-color: var(--primary-c);
+    color: var(--bg-neutral);
+    width: 191px;
+    font-size: 13px;
+    padding: 8px 0px;
+    margin: 6px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.onGetStarted-content-main {
+    text-align: -webkit-center;
+}
+
+#backdrop-submit {
+    display: none;
+    background-color: black;
+    opacity: 0.7;
+    position: absolute;
+    height: 100vh;
+    width: 100vw;
+    z-index: 100;
+    top: 0;
+    left: 0;
+}
+
+.btn-success-profile {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 15px;
+}
+
+.main-tax-filing-container.successNextPageTrigger {
+    display: none;
+    flex-direction: row;
+    justify-content: center;
+}
+
+#taxpayerProfile-list {
+    width: 65vw !important;
+}
+
+.main-feed-feed-main-container {
+    display: grid;
+    grid-template-columns: 40% auto;
+    grid-template-rows: 50vh calc(50vh - 110px);
+    grid-gap: 15px;
+}
+
+.main-feed-dashboard-dash {
+    /* grid-row: 1 / span 2; */
+}
+
+.main-feed.feed {
+    height: 100%;
+}
+
+.quick-access-tab {
+    height: 100%;
+}
+
+#taxpayerProfile-dashboard-list {
+    width: 30vw !important;
+}
+
+.dashboard-tax-profile-btns-nav {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.tax-filing-form-fill-up.dashboard-tax-profile {
+    height: calc(50vh - 135px);
+    overflow: auto;
+}
+
+.recentFiling.main-container {
+    width: 95%;
+    font-size: 15px;
+    text-align: center;
+    padding: 5px 0px;
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+.recentFiling.main-list-container {
+    margin: 10px 20px;
+    overflow: auto;
+}
+
+.recentFiling.main-container-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.recentFiling.main-container > div {
+    font-weight: bold;
+}
+
+.recentFiling.inner-container.form-title {
+    max-width: 195px;
+    text-align: left;
+    padding-left: 10px;
+}
+
+.recentFiling.inner-container.nav {
+    text-align: right;
+    margin-right: 10px;
+    padding: 0px 5px;
+}
+
+.main-title-header.recentFiling {
+    display: flex;
+    justify-content: space-between;
+}
+
+.recentFiling.handle-main-container {
+    border: 1px solid var(--primary-c);
+    border-radius: 5px;
+}
+
+.recentFiling.inner-container-details {
+    font-size: 15px;
+    border-top: 1px solid var(--primary-c);
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.recentFiling.inner-container-recentFiling-accordion {
+    padding: 10px;
+    padding-top: 0px;
+}
+.recentFiling.innerp-detail {
+    display: flex;
+    font-size: 15px;
+    font-weight: bold;
+    margin: 10px;
+}
+
+.recentFiling-detail-data {
+    width: 250px;
+}
+
+#global-notification {
+    position: absolute;
+    z-index: 5;
+    bottom: 25px;
+    left: 8px;
+    width: 300px;
+    height: 70px;
+    background-color: var(--bg-neutral);
+    border: 1px solid var(--primary-c);
+    border-radius: 5px;
+}
+
+.show {
+    display: block;
+}
+
+.hide {
+    display: none;
+}
+
+.notification-content {
+    font-size: 15px;
+    font-weight: bold;
+    padding: 15px;
+}
+
+.notification-refrenceno {
+    padding-left: 15px;
+    display: flex;
+}
+
+.main-feed-container-feed.recentFiling {
+    height: calc(50vh - 83px);
+    overflow: auto;
+}
