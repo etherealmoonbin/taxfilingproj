@@ -53,9 +53,10 @@ attachedFile : any;
   logTaxFilingData: string;
 
   constructor(private http: HttpClient) { 
-    // this.myAppUrl = 'https://taxfilingapideploy.azurewebsites.net/'; // prod
+    // this.myAppUrl = 'https://taxfilingapi.azurewebsites.net/'; // prod
     this.myAppUrl = 'https://localhost:44314/'; //dev
-    this.testurl = 'http://192.168.100.91:8001/';
+    this.testurl = 'http://192.168.100.91:8001/'; // test
+    
     this.loginApiUrl = 'api/webClientXSoaps';
     this.logApiUrl = 'api/clientauthlogs';
 
@@ -64,7 +65,7 @@ attachedFile : any;
     
     this.logSubmitBookkeeping = 'api/BookkeepingDataRecords';
 
-    this.logTaxPayerProfileUrl = 'api/TaxPayerProfiles';
+    this.logTaxPayerProfileUrl = 'api/webTaxPayerProfileXSoaps';
     this.logTaxFilingData = 'api/webTaxFilingsXSoaps';
   }
 
@@ -114,14 +115,14 @@ attachedFile : any;
     myHeaders.append("Content-Type", "application/json");
 
     var raw = JSON.stringify({ 
-      "Username" : username,
-      "Key" : token,
-      "Email" : email,
-      "FullName" : fullname,
-      "CivilStatus" : maritalstatus,
-      "Birthdate" : birthdate,
-      "RDO" : rdo,
-      "Citizenship" : citizenship
+    "username": username,
+    "key": token,
+    "email": email,
+    "fullName": fullname,
+    "civilStatus": maritalstatus,
+    "birthDate": birthdate,
+    "rdo": rdo,
+    "citizenship": citizenship
     });
 
     this.requestOptions = {
@@ -417,10 +418,10 @@ attachedFile : any;
       $('#global-notification').removeClass('hide').addClass('show');
       $('.notification-content').text(data !== 0 ? 'Tax Filing Successful' : 'Tax Filing Failed');
       $('.notification-refrenceval').text(data);
-    },1500);
+    },1000);
     setTimeout(()=> {
       $('#global-notification').removeClass('show').addClass('hide');
-    }, 2500);
+    }, 5000);
   }
 
   COA = [

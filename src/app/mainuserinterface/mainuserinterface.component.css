@@ -543,6 +543,7 @@ select#report-businessnametimestamp-category {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    margin-top: 100px;
 }
 
 .tax-filing-container-profile-item-taxpayer-type-inner {
@@ -601,8 +602,12 @@ select#report-businessnametimestamp-category {
 .main-feed-feed-main-container {
     display: grid;
     grid-template-columns: 40% auto;
-    grid-template-rows: 50vh calc(50vh - 110px);
+    grid-template-rows: 52vh calc(50vh - 110px);
     grid-gap: 15px;
+}
+
+.main-feed-dashboard-filings {
+    grid-row: 1 / span 2;
 }
 
 .main-feed-dashboard-dash {
@@ -697,7 +702,7 @@ select#report-businessnametimestamp-category {
 }
 
 .recentFiling-detail-data {
-    width: 250px;
+    width: 360px;
 }
 
 #global-notification {
@@ -734,4 +739,27 @@ select#report-businessnametimestamp-category {
 .main-feed-container-feed.recentFiling {
     height: calc(50vh - 83px);
     overflow: auto;
+    border-bottom: 1px solid var(--primary-c);
+}
+
+.main-feed-container-feed.completedFiling {
+    height: calc(50vh - 117px);
+    overflow: auto;
+}
+
+.recentFiling-header, .recentFiling-header-completed {
+    margin: 0px 25px;
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--primary-c);
+}
+
+.recentFiling-header-completed {
+    margin-top: 10px;
+}
+
+.main-feed-onGetStarted-container {
+    height: calc(100vh - 80px);
+    border: 1px solid var(--primary-c);
+    border-radius: 5px;
 }

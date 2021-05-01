@@ -8,8 +8,21 @@
             <div class="home-navigation reports" (click)="homeNavigate($event)" [ngStyle]="{'border-bottom': activeReports ? '4px solid var(--primary-c)' : '4px solid var(--bg-neutral)' }">Reports</div>
         </div>
         <div class="holder"></div>
-        <div class="main-feed-feed-main-container" *ngIf="activeDashboard">
-            <div class="main-feed-dashboard-dash" *ngIf="activeDashboard">
+        <div class="main-feed-onGetStarted-container" *ngIf="onGetStarted && activeDashboard && taxpayerDetails.length == 0">
+            <div class="main-feed-onGetStarted">
+                <div class="loader-container">
+                    <div class="loader"></div>
+                </div>
+                <div class="onGetStarted-content-main">
+                    <div class="onGetStarted-content header">Discover Tax Filing Project Features</div>
+                    <div class="onGetStarted-content btn-trigger" (click)="onGetStartedNavigate('taxfiling')">Start filing tax</div>
+                    <div class="onGetStarted-content btn-trigger" (click)="onGetStartedNavigate('bookeeping')">Input a journal record</div>
+                    <!-- <div class="onGetStarted-content btn-trigger" (click)="onGetStartedNavigate('dashboard')">Skip</div> -->
+                </div>
+            </div>
+        </div>
+        <div class="main-feed-feed-main-container" *ngIf="activeDashboard && taxpayerDetails.length !== 0">
+            <div class="main-feed-dashboard-dash">
                 <div class="quick-access-tab">
                     <div class="main-feed feed">
                         <div class="main-title-header">Tax Payer Profiles</div>
@@ -17,7 +30,7 @@
                         <div class="main-feed-container-feed">
                             <div class="tax-filing-form-fill-up dashboard-tax-profile">
                                 <div class="tax-filing-input-field dropdown-header taxfiling">
-                                    <select id="taxpayerProfile-dashboard-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                    <select id="taxpayerProfile-dashboard-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                         <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                     </select>
                                 </div>
@@ -67,12 +80,39 @@
                     </div>
                 </div>
             </div>
-            <div class="main-feed-dashboard-filings" *ngIf="activeDashboard">
+            <div class="main-feed-dashboard-filings">
                 <div class="quick-access-tab">
                     <div class="main-feed feed">
                         <div class="main-title-header recentFiling"><div class="recentFiling header-title">Recent Filings</div><i class="fas fa-window-maximize"></i></div>
                         <div class="main-title-divider"></div>
-                        <div class="main-feed-container-feed recentFiling">
+                        <div class="recentFiling-header">Pending Filings</div>
+                        <div class="loader-container recentFiling" *ngIf="!RecentFilingDataReady && recentFiling.length == 0">
+                            <div class="loader"></div>
+                        </div>
+                        <div class="main-feed-container-feed recentFiling" *ngIf="RecentFilingDataReady && recentFiling.length !== 0">
+                            <div class="recentFiling main-list-container" *ngFor="let recentFiling of recentFiling">
+                                <div class="recentFiling handle-main-container" *ngIf="recentFiling.status == 'Pending'">
+                                    <div class="recentFiling main-container" (click)="recentFilingAccordionToggle(recentFiling)">
+                                        <div class="recentFiling inner-container form-title">BIR Form No. {{recentFiling.birFormNo}}</div>
+                                        <div class="recentFiling inner-container">Return Period : {{recentFiling.returnPeriod}}</div>
+                                        <div class="recentFiling inner-container nav"><i class="fas fa-window-maximize"></i></div>
+                                    </div>
+
+                                    <div class="recentFiling inner-container-recentFiling-accordion" *ngIf="recentFiling.isActive">
+                                        <div class="recentFiling inner-container-details">Tax Filing Details - Status : {{recentFiling.status}}</div>
+                                        <div class="recentFiling innerp-detail" *ngIf="recentFiling.values.penalty !== undefined"><div class="recentFiling-detail-data">Penalty</div><div>{{recentFiling.values.penalty}}</div></div>
+                                        <div class="recentFiling innerp-detail" *ngIf="recentFiling.values.amountpayable !== undefined"><div class="recentFiling-detail-data">Total Payable</div><div>{{recentFiling.values.amountpayable}}</div></div>
+                                        <div class="recentFiling innerp-detail" *ngIf="recentFiling.values.totalamountremittance !== undefined"><div class="recentFiling-detail-data">Total Amout of Remittance</div><div>{{recentFiling.values.totalamountremittance}}</div></div>
+                                        <div class="recentFiling innerp-detail" *ngIf="recentFiling.values.penaltiesPayable !== undefined"><div class="recentFiling-detail-data">Total Penalties Payable</div><div>{{recentFiling.values.penaltiesPayable}}</div></div>
+                                        <div class="recentFiling innerp-detail" *ngIf="recentFiling.values.totalAmountStillDue !== undefined"><div class="recentFiling-detail-data">Total Amout Still Due</div><div>{{recentFiling.values.totalAmountStillDue}}</div></div>
+                                        <div class="recentFiling innerp-detail" *ngIf="recentFiling.values.balancetobecarriedover !== undefined"><div class="recentFiling-detail-data">Balance to be Carried Over to Next Return</div><div>{{recentFiling.values.balancetobecarriedover}}</div></div>
+                                        <div class="recentFiling innerp-detail" *ngIf="recentFiling.values.taxableincome !== undefined"><div class="recentFiling-detail-data">Total Taxable Compensation Income</div><div>{{recentFiling.values.taxableincome}}</div></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="recentFiling-header-completed">Completed Filings</div>
+                        <div class="main-feed-container-feed completedFiling" *ngIf="recentFiling.status == 'Completed'">
                             <div class="recentFiling main-list-container" *ngFor="let recentFiling of recentFiling">
                                 <div class="recentFiling handle-main-container">
                                     <div class="recentFiling main-container" (click)="recentFilingAccordionToggle(recentFiling)">
@@ -82,12 +122,14 @@
                                     </div>
 
                                     <div class="recentFiling inner-container-recentFiling-accordion" *ngIf="recentFiling.isActive">
-                                        <div class="recentFiling inner-container-details">Tax Filing Details</div>
-                                        <div class="recentFiling innerp-detail"><div class="recentFiling-detail-data" *ngIf="recentFiling.values.penalty !== undefined">Penalty</div><div>{{recentFiling.values.penalty}}</div></div>
-                                        <div class="recentFiling innerp-detail"><div class="recentFiling-detail-data" *ngIf="recentFiling.values.amountpayable !== undefined">Total Payable</div><div>{{recentFiling.values.amountpayable}}</div></div>
-                                        <div class="recentFiling innerp-detail"><div class="recentFiling-detail-data" *ngIf="recentFiling.values.totalamountremittance !== undefined">Total Amout of Remittance</div><div>{{recentFiling.values.totalamountremittance}}</div></div>
-                                        <div class="recentFiling innerp-detail"><div class="recentFiling-detail-data" *ngIf="recentFiling.values.penaltiesPayable !== undefined">Total Penalties Payable</div><div>{{recentFiling.values.penaltiesPayable}}</div></div>
-                                        <div class="recentFiling innerp-detail"><div class="recentFiling-detail-data" *ngIf="recentFiling.values.totalAmountStillDue !== undefined">Total Amout Still Due</div><div>{{recentFiling.values.totalAmountStillDue}}</div></div>
+                                        <div class="recentFiling inner-container-details">Tax Filing Details - Status : {{recentFiling.status}}</div>
+                                        <div class="recentFiling innerp-detail" *ngIf="recentFiling.values.penalty !== undefined"><div class="recentFiling-detail-data">Penalty</div><div>{{recentFiling.values.penalty}}</div></div>
+                                        <div class="recentFiling innerp-detail" *ngIf="recentFiling.values.amountpayable !== undefined"><div class="recentFiling-detail-data">Total Payable</div><div>{{recentFiling.values.amountpayable}}</div></div>
+                                        <div class="recentFiling innerp-detail" *ngIf="recentFiling.values.totalamountremittance !== undefined"><div class="recentFiling-detail-data">Total Amout of Remittance</div><div>{{recentFiling.values.totalamountremittance}}</div></div>
+                                        <div class="recentFiling innerp-detail" *ngIf="recentFiling.values.penaltiesPayable !== undefined"><div class="recentFiling-detail-data">Total Penalties Payable</div><div>{{recentFiling.values.penaltiesPayable}}</div></div>
+                                        <div class="recentFiling innerp-detail" *ngIf="recentFiling.values.totalAmountStillDue !== undefined"><div class="recentFiling-detail-data">Total Amout Still Due</div><div>{{recentFiling.values.totalAmountStillDue}}</div></div>
+                                        <div class="recentFiling innerp-detail" *ngIf="recentFiling.values.balancetobecarriedover !== undefined"><div class="recentFiling-detail-data">Balance to be Carried Over to Next Return</div><div>{{recentFiling.values.balancetobecarriedover}}</div></div>
+                                        <div class="recentFiling innerp-detail" *ngIf="recentFiling.values.taxableincome !== undefined"><div class="recentFiling-detail-data">Total Taxable Compensation Income</div><div>{{recentFiling.values.taxableincome}}</div></div>
                                     </div>
                                 </div>
                             </div>
@@ -95,56 +137,32 @@
                     </div>
                 </div>
             </div>
-
-            <div class="main-feed feed" *ngIf="activeDashboard">
-                <div *ngIf="taxpayerDetails.length == 0">
-                    <div class="main-feed-onGetStarted">
-                        <div class="onGetStarted-content-main">
-                            <div class="onGetStarted-content header">Discover Tax Filing Project Features</div>
-                            <div class="onGetStarted-content btn-trigger" (click)="onGetStartedNavigate('taxfiling')">Start filing tax</div>
-                            <div class="onGetStarted-content btn-trigger" (click)="onGetStartedNavigate('bookeeping')">Input a journal record</div>
-                            <!-- <div class="onGetStarted-content btn-trigger" (click)="onGetStartedNavigate('dashboard')">Skip</div> -->
-                        </div>
-                    </div>
-                </div>
-
-                <div class="main-feed-upper" *ngIf="!onGetStarted">
-                        <div class="main-feed-main-dashboard">
-
-                        </div>
-                        <div class="main-feed-recent-feed">
-                            <div class="main-title-header">Recent Feed</div>
-                            <div class="main-title-divider"></div>
-                            <div class="main-feed-container-feed">
-                                <div class="main-feed-feed-table">
-                                    <!-- <table>
-                                        <thead>
-                                        <tr>
-                                            <th>Date Time</th>
-                                            <th>Log Value</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="main-feed-td" *ngIf="mainLogValue"> 
-                                                <tr *ngFor="let log of mainLogValue;">
-                                                <td>{{log.time}}</td>
-                                                <td>{{log.logValue}}</td>
-                                                </tr>
-                                    </tbody>
-                                    <div *ngIf="mainLogValue == null" class="sys-loader mainlog">
-                                        <div class="loader"></div>
-                                    </div>
-                                    </table> -->
-                                </div>
-                            </div>
-                        </div>
-                </div>
-            </div>
-
-            <div class="main-feed-lower" *ngIf="activeDashboard">
-                <div class="main-feed-lower-r">
-                    <div class="main-feed transaction">
-                        <div class="main-title-header">Recent Transactions</div>
+            <div class="main-feed-upper">
+                <div class="main-feed feed">
+                    <div class="main-feed-recent-feed">
+                        <div class="main-title-header">Recent Feed</div>
                         <div class="main-title-divider"></div>
+                        <div class="main-feed-container-feed">
+                            <div class="main-feed-feed-table">
+                                <!-- <table>
+                                    <thead>
+                                    <tr>
+                                        <th>Date Time</th>
+                                        <th>Log Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="main-feed-td" *ngIf="mainLogValue"> 
+                                            <tr *ngFor="let log of mainLogValue;">
+                                            <td>{{log.time}}</td>
+                                            <td>{{log.logValue}}</td>
+                                            </tr>
+                                </tbody>
+                                <div *ngIf="mainLogValue == null" class="sys-loader mainlog">
+                                    <div class="loader"></div>
+                                </div>
+                                </table> -->
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -408,7 +426,7 @@
                                         <div class="tax-filing-input-title">Return Period</div>
                                     </div>
                                     <div class="tax-filing-input-field">
-                                        <div><input class="form-input taxfiling-form date" id="return-period-{{link.code}}" type="date"></div>
+                                        <div><input class="form-input taxfiling-form date" [(ngModel)]="returnDateVal" id="return-period-{{link.code}}" type="date"></div>
                                     </div>
                                     <div class="tax-filing-input-field">
                                         <div class="tax-filing-input-title">Penalties</div>
@@ -441,7 +459,7 @@
                                         <div class="tax-filing-input-title-title">Select your tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -479,7 +497,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'reset')">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'submit')">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, link.code + '-submit')">Next</div>
                                     </div>
                                 </div>
 
@@ -494,7 +512,7 @@
                                         <div class="tax-filing-input-title">Return Period</div>
                                     </div>
                                     <div class="tax-filing-input-field">
-                                        <div><input class="form-input taxfiling-form date" id="return-period-{{link.code}}" type="date"></div>
+                                        <div><input class="form-input taxfiling-form date" [(ngModel)]="returnDateVal" id="return-period-{{link.code}}" type="date"></div>
                                     </div>
                                     <div class="tax-filing-input-field">
                                         <div class="tax-filing-input-title">Penalties</div>
@@ -526,7 +544,7 @@
                                         <div class="tax-filing-input-title-title">Select your tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -564,7 +582,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 1, null)">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'submit')">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, link.code + '-submit')">Next</div>
                                     </div>
                                 </div>
 
@@ -580,7 +598,7 @@
                                         <div class="tax-filing-input-title">Return Period</div>
                                     </div>
                                     <div class="tax-filing-input-field">
-                                        <div><input class="form-input taxfiling-form date" id="return-period-{{link.code}}" type="date"></div>
+                                        <div><input class="form-input taxfiling-form date" [(ngModel)]="returnDateVal" id="return-period-{{link.code}}" type="date"></div>
                                     </div>
                                     <div class="tax-filing-input-field">
                                         <div class="tax-filing-input-title">Penalties</div>
@@ -613,7 +631,7 @@
                                         <div class="tax-filing-input-title-title">Select your tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -651,7 +669,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, null)">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'submit')">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, link.code + '-submit')">Next</div>
                                     </div>
                                 </div>
 
@@ -705,7 +723,7 @@
                                         <div class="tax-filing-input-title">Return Period</div>
                                     </div>
                                     <div class="tax-filing-input-field">
-                                        <div><input class="form-input taxfiling-form date" id="return-period-{{link.code}}" type="date"></div>
+                                        <div><input class="form-input taxfiling-form date" [(ngModel)]="returnDateVal" id="return-period-{{link.code}}" type="date"></div>
                                     </div>
                                     <div class="tax-filing-input-field">
                                         <div class="tax-filing-input-title">Penalties</div>
@@ -737,7 +755,7 @@
                                         <div class="tax-filing-input-title-title">Select your tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -775,7 +793,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 1, null)">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'submit')">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, link.code + '-submit')">Next</div>
                                     </div>
                                 </div>
 
@@ -817,7 +835,7 @@
                                         <div class="tax-filing-input-title">Return Period</div>
                                     </div>
                                     <div class="tax-filing-input-field">
-                                        <div><input class="form-input taxfiling-form date" id="return-period-{{link.code}}" type="date"></div>
+                                        <div><input class="form-input taxfiling-form date" [(ngModel)]="returnDateVal" id="return-period-{{link.code}}" type="date"></div>
                                     </div>
                                     <div class="tax-filing-input-field">
                                         <div class="tax-filing-input-title">Total Penalties</div>
@@ -851,7 +869,7 @@
                                         <div class="tax-filing-input-title-title">Select your tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -889,7 +907,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 1, null)">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'submit')">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, link.code + '-submit')">Next</div>
                                     </div>
                                 </div>
 
@@ -925,7 +943,7 @@
                                         <div class="tax-filing-input-title">Return Period</div>
                                     </div>
                                     <div class="tax-filing-input-field">
-                                        <div><input class="form-input taxfiling-form date" id="return-period-{{link.code}}" type="date"></div>
+                                        <div><input class="form-input taxfiling-form date" [(ngModel)]="returnDateVal" id="return-period-{{link.code}}" type="date"></div>
                                     </div>
                                     <div class="tax-filing-input-field">
                                         <div class="tax-filing-input-title">Penalties</div>
@@ -958,7 +976,7 @@
                                         <div class="tax-filing-input-title-title">Select your tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -996,7 +1014,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 1, null)">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'submit')">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, link.code + '-submit')">Next</div>
                                     </div>
                                 </div>
 
@@ -1109,7 +1127,7 @@
                                         <div class="tax-filing-input-title">Return Period</div>
                                     </div>
                                     <div class="tax-filing-input-field">
-                                        <div><input class="form-input taxfiling-form date" id="return-period-{{link.code}}" type="date"></div>
+                                        <div><input class="form-input taxfiling-form date" [(ngModel)]="returnDateVal" id="return-period-{{link.code}}" type="date"></div>
                                     </div>
                                     <div class="tax-filing-input-field">
                                         <div class="tax-filing-input-title">Penalties</div>
@@ -1142,7 +1160,7 @@
                                         <div class="tax-filing-input-title-title">Select your tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -1180,7 +1198,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 1, null)">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'submit')">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, link.code + '-submit')">Next</div>
                                     </div>
                                 </div>
 
@@ -1293,7 +1311,7 @@
                                         <div class="tax-filing-input-title">Return Period</div>
                                     </div>
                                     <div class="tax-filing-input-field">
-                                        <div><input class="form-input taxfiling-form date" id="return-period-{{link.code}}" type="date"></div>
+                                        <div><input class="form-input taxfiling-form date" [(ngModel)]="returnDateVal" id="return-period-{{link.code}}" type="date"></div>
                                     </div>
                                     <div class="tax-filing-input-field">
                                         <div class="tax-filing-input-title">Penalties</div>
@@ -1326,7 +1344,7 @@
                                         <div class="tax-filing-input-title-title">Select your tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -1364,7 +1382,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 1, null)">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'submit')">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, link.code + '-submit')">Next</div>
                                     </div>
                                 </div>
 
@@ -1418,7 +1436,7 @@
                                         <div class="tax-filing-input-title">Return Period</div>
                                     </div>
                                     <div class="tax-filing-input-field">
-                                        <div><input class="form-input taxfiling-form date" id="return-period-{{link.code}}" type="date"></div>
+                                        <div><input class="form-input taxfiling-form date" [(ngModel)]="returnDateVal" id="return-period-{{link.code}}" type="date"></div>
                                     </div>
                                     <div class="tax-filing-input-field">
                                         <div class="tax-filing-input-title">Penalties</div>
@@ -1451,7 +1469,7 @@
                                         <div class="tax-filing-input-title-title">Select your tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -1489,7 +1507,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 1, null)">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'submit')">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, link.code + '-submit')">Next</div>
                                     </div>
                                 </div>
                             </div>
@@ -1573,7 +1591,7 @@
                                         <div class="tax-filing-input-title">Return Period</div>
                                     </div>
                                     <div class="tax-filing-input-field">
-                                        <div><input class="form-input taxfiling-form date" id="return-period-{{link.code}}" type="date"></div>
+                                        <div><input class="form-input taxfiling-form date" [(ngModel)]="returnDateVal" id="return-period-{{link.code}}" type="date"></div>
                                     </div>
                                     <div class="tax-filing-input-field">
                                         <div class="tax-filing-input-title">Penalties</div>
@@ -1606,7 +1624,7 @@
                                         <div class="tax-filing-input-title-title">Select your tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -1644,7 +1662,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 1, null)">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'submit')">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, link.code + '-submit')">Next</div>
                                     </div>
                                 </div>
                                 
@@ -1773,7 +1791,7 @@
                                         <div class="tax-filing-input-title">Return Period</div>
                                     </div>
                                     <div class="tax-filing-input-field">
-                                        <div><input class="form-input taxfiling-form date" id="return-period-{{link.code}}" type="date"></div>
+                                        <div><input class="form-input taxfiling-form date" [(ngModel)]="returnDateVal" id="return-period-{{link.code}}" type="date"></div>
                                     </div>
                                     <div class="tax-filing-input-field">
                                         <div class="tax-filing-input-title">Penalties</div>
@@ -1807,7 +1825,7 @@
                                         <div class="tax-filing-input-title-title">Select your tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -1845,7 +1863,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 1, null)">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'submit')">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, link.code + '-submit')">Next</div>
                                     </div>
                                 </div>
 
@@ -2072,7 +2090,7 @@
                                         <div class="tax-filing-input-title">Return Period</div>
                                     </div>
                                     <div class="tax-filing-input-field">
-                                        <div><input class="form-input taxfiling-form date" id="return-period-{{link.code}}" type="date"></div>
+                                        <div><input class="form-input taxfiling-form date" [(ngModel)]="returnDateVal" id="return-period-{{link.code}}" type="date"></div>
                                     </div>
                                     <div class="tax-filing-input-field">
                                         <div class="tax-filing-input-title">Penalties</div>
@@ -2106,7 +2124,7 @@
                                         <div class="tax-filing-input-title-title">Select your tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -2144,7 +2162,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 1, null)">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'submit')">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, link.code + '-submit')">Next</div>
                                     </div>
                                 </div>
                             </div>
@@ -2377,7 +2395,7 @@
                                         <div class="tax-filing-input-title">Return Period</div>
                                     </div>
                                     <div class="tax-filing-input-field">
-                                        <div><input class="form-input taxfiling-form date" id="return-period-{{link.code}}" type="date"></div>
+                                        <div><input class="form-input taxfiling-form date" [(ngModel)]="returnDateVal" id="return-period-{{link.code}}" type="date"></div>
                                     </div>
                                     <div class="tax-filing-input-field">
                                         <div class="tax-filing-input-title">Penalties</div>
@@ -2411,7 +2429,7 @@
                                         <div class="tax-filing-input-title-title">Select your tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -2449,7 +2467,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 1, null)">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'submit')">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, link.code + '-submit')">Next</div>
                                     </div>
                                 </div>
 
@@ -2509,7 +2527,7 @@
                                         <div class="tax-filing-input-title">Return Period</div>
                                     </div>
                                     <div class="tax-filing-input-field">
-                                        <div><input class="form-input taxfiling-form date" id="return-period-{{link.code}}" type="date"></div>
+                                        <div><input class="form-input taxfiling-form date" [(ngModel)]="returnDateVal" id="return-period-{{link.code}}" type="date"></div>
                                     </div>
                                     <div class="tax-filing-input-field">
                                         <div class="tax-filing-input-title">Penalties</div>
@@ -2543,7 +2561,7 @@
                                         <div class="tax-filing-input-title-title">Select your tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -2581,7 +2599,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 1, null)">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'submit')">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, link.code + '-submit')">Next</div>
                                     </div>
                                 </div>
                             </div>
@@ -2679,7 +2697,7 @@
                                         <div class="tax-filing-input-title-title">Select your tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -2717,7 +2735,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 1, null)">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'submit')">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, link.code + '-submit')">Next</div>
                                     </div>
                                 </div>
                             </div>
@@ -2821,7 +2839,7 @@
                                         <div class="tax-filing-input-title-title">Select your tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -2859,7 +2877,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 1, null)">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'submit')">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, link.code + '-submit')">Next</div>
                                     </div>
                                 </div>
                             </div>
@@ -2872,7 +2890,7 @@
                                         <div class="tax-filing-input-title">Return Period</div>
                                     </div>
                                     <div class="tax-filing-input-field">
-                                        <div><input class="form-input taxfiling-form date" id="return-period-{{link.code}}" type="date"></div>
+                                        <div><input class="form-input taxfiling-form date" [(ngModel)]="returnDateVal" id="return-period-{{link.code}}" type="date"></div>
                                     </div>
                                     <div class="tax-filing-input-field">
                                         <div class="tax-filing-input-title">Penalties</div>
@@ -2913,7 +2931,7 @@
                                         <div class="tax-filing-input-title-title">Select your tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -2951,7 +2969,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 1, null)">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'submit')">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, link.code + '-submit')">Next</div>
                                     </div>
                                 </div>
                             </div>
@@ -2964,7 +2982,7 @@
                                         <div class="tax-filing-input-title">Return Period</div>
                                     </div>
                                     <div class="tax-filing-input-field">
-                                        <div><input class="form-input taxfiling-form date" id="return-period-{{link.code}}" type="date"></div>
+                                        <div><input class="form-input taxfiling-form date" [(ngModel)]="returnDateVal" [(ngModel)]="returnDateVal" id="return-period-{{link.code}}" type="date"></div>
                                     </div>
                                     <div class="tax-filing-input-field">
                                         <div class="tax-filing-input-title">Penalties</div>
@@ -3006,7 +3024,7 @@
                                         <div class="tax-filing-input-title-title">Select your tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -3044,7 +3062,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, null)">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 2, link.code)">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 2, link.code + '-skip')">Next</div>
                                     </div>
                                 </div>
 
@@ -3054,7 +3072,7 @@
                                         <div class="tax-filing-input-title-title">Select your spouse tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(2, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -3092,7 +3110,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 1, null)">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'submit')">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, link.code + '-submit')">Next</div>
                                     </div>
                                 </div>
                             </div>
@@ -3105,7 +3123,7 @@
                                         <div class="tax-filing-input-title">Return Period</div>
                                     </div>
                                     <div class="tax-filing-input-field">
-                                        <div><input class="form-input taxfiling-form date" id="return-period-{{link.code}}" type="date"></div>
+                                        <div><input class="form-input taxfiling-form date" [(ngModel)]="returnDateVal" id="return-period-{{link.code}}" type="date"></div>
                                     </div>
                                     <div class="tax-filing-input-field">
                                         <div class="tax-filing-input-title">Penalties</div>
@@ -3146,7 +3164,7 @@
                                         <div class="tax-filing-input-title-title">Select your tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -3184,7 +3202,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 1, null)">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'submit')">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, link.code + '-submit')">Next</div>
                                     </div>
                                 </div>
                             </div>
@@ -3197,7 +3215,7 @@
                                         <div class="tax-filing-input-title">Return Period</div>
                                     </div>
                                     <div class="tax-filing-input-field">
-                                        <div><input class="form-input taxfiling-form date" id="return-period-{{link.code}}" type="date"></div>
+                                        <div><input class="form-input taxfiling-form date" [(ngModel)]="returnDateVal" id="return-period-{{link.code}}" type="date"></div>
                                     </div>
                                     <div class="tax-filing-input-field">
                                         <div class="tax-filing-input-title">Penalties</div>
@@ -3238,7 +3256,7 @@
                                         <div class="tax-filing-input-title-title">Select your tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -3276,7 +3294,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 1, null)">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'submit')">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, link.code + '-submit')">Next</div>
                                     </div>
                                 </div>
                             </div>
@@ -3289,7 +3307,7 @@
                                         <div class="tax-filing-input-title">Return Period</div>
                                     </div>
                                     <div class="tax-filing-input-field">
-                                        <div><input class="form-input taxfiling-form date" id="return-period-{{link.code}}" type="date"></div>
+                                        <div><input class="form-input taxfiling-form date" [(ngModel)]="returnDateVal" id="return-period-{{link.code}}" type="date"></div>
                                     </div>
                                     <div class="tax-filing-input-field">
                                         <div class="tax-filing-input-title">Penalties</div>
@@ -3330,7 +3348,7 @@
                                         <div class="tax-filing-input-title-title">Select your tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -3368,7 +3386,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 1, null)">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'submit')">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, link.code + '-submit')">Next</div>
                                     </div>
                                 </div>
                             </div>
@@ -3381,7 +3399,7 @@
                                         <div class="tax-filing-input-title">Return Period</div>
                                     </div>
                                     <div class="tax-filing-input-field">
-                                        <div><input class="form-input taxfiling-form date" id="return-period-{{link.code}}" type="date"></div>
+                                        <div><input class="form-input taxfiling-form date" [(ngModel)]="returnDateVal" id="return-period-{{link.code}}" type="date"></div>
                                     </div>
                                     <div class="tax-filing-input-field">
                                         <div class="tax-filing-input-title">Penalties</div>
@@ -3422,7 +3440,7 @@
                                         <div class="tax-filing-input-title-title">Select your tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -3460,7 +3478,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 1, null)">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'submit')">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, link.code + '-submit')">Next</div>
                                     </div>
                                 </div>
                             </div>
@@ -3473,7 +3491,7 @@
                                         <div class="tax-filing-input-title">Return Period</div>
                                     </div>
                                     <div class="tax-filing-input-field">
-                                        <div><input class="form-input taxfiling-form date" id="return-period-{{link.code}}" type="date"></div>
+                                        <div><input class="form-input taxfiling-form date" [(ngModel)]="returnDateVal" id="return-period-{{link.code}}" type="date"></div>
                                     </div>
                                     <div class="tax-filing-input-field">
                                         <div class="tax-filing-input-title">Penalties</div>
@@ -3514,7 +3532,7 @@
                                         <div class="tax-filing-input-title-title">Select your tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -3552,7 +3570,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 1, null)">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'submit')">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, link.code + '-submit')">Next</div>
                                     </div>
                                 </div>
                             </div>
@@ -3565,7 +3583,7 @@
                                         <div class="tax-filing-input-title">Return Period</div>
                                     </div>
                                     <div class="tax-filing-input-field">
-                                        <div><input class="form-input taxfiling-form date" id="return-period-{{link.code}}" type="date"></div>
+                                        <div><input class="form-input taxfiling-form date" [(ngModel)]="returnDateVal" id="return-period-{{link.code}}" type="date"></div>
                                     </div>
                                     <div class="tax-filing-input-field">
                                         <div class="tax-filing-input-title">Penalties</div>
@@ -3606,7 +3624,7 @@
                                         <div class="tax-filing-input-title-title">Select your tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -3644,7 +3662,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 1, null)">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'submit')">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, link.code + '-submit')">Next</div>
                                     </div>
                                 </div>
                             </div>
@@ -3697,7 +3715,7 @@
                                         <div class="tax-filing-input-title">Return Period</div>
                                     </div>
                                     <div class="tax-filing-input-field">
-                                        <div><input class="form-input taxfiling-form date" id="return-period-{{link.code}}" type="date"></div>
+                                        <div><input class="form-input taxfiling-form date" [(ngModel)]="returnDateVal" id="return-period-{{link.code}}" type="date"></div>
                                     </div>
                                     <div class="tax-filing-input-field">
                                         <div class="tax-filing-input-title">Penalties</div>
@@ -3738,7 +3756,7 @@
                                         <div class="tax-filing-input-title-title">Select your tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -3776,7 +3794,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 1, null)">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'submit')">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, link.code + '-submit')">Next</div>
                                     </div>
                                 </div>
                             </div>
@@ -3789,7 +3807,7 @@
                                         <div class="tax-filing-input-title">Return Period</div>
                                     </div>
                                     <div class="tax-filing-input-field">
-                                        <div><input class="form-input taxfiling-form date" id="return-period-{{link.code}}" type="date"></div>
+                                        <div><input class="form-input taxfiling-form date" [(ngModel)]="returnDateVal" id="return-period-{{link.code}}" type="date"></div>
                                     </div>
                                     <div class="tax-filing-input-field">
                                         <div class="tax-filing-input-title">Penalties</div>
@@ -3830,7 +3848,7 @@
                                         <div class="tax-filing-input-title-title">Select your tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -3868,7 +3886,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 1, null)">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'submit')">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, link.code + '-submit')">Next</div>
                                     </div>
                                 </div>
                             </div>
@@ -3908,7 +3926,7 @@
                                         <div class="tax-filing-input-title">Return Period</div>
                                     </div>
                                     <div class="tax-filing-input-field">
-                                        <div><input class="form-input taxfiling-form date" id="return-period-{{link.code}}" type="date"></div>
+                                        <div><input class="form-input taxfiling-form date" [(ngModel)]="returnDateVal" id="return-period-{{link.code}}" type="date"></div>
                                     </div>
                                     <div class="tax-filing-input-field">
                                         <div class="tax-filing-input-title">Penalties</div>
@@ -3949,7 +3967,7 @@
                                         <div class="tax-filing-input-title-title">Select your tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -3987,7 +4005,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 1, null)">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'submit')">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, link.code + '-submit')">Next</div>
                                     </div>
                                 </div>
                             </div>
@@ -4000,7 +4018,7 @@
                                         <div class="tax-filing-input-title">Return Period</div>
                                     </div>
                                     <div class="tax-filing-input-field">
-                                        <div><input class="form-input taxfiling-form date" id="return-period-{{link.code}}" type="date"></div>
+                                        <div><input class="form-input taxfiling-form date" [(ngModel)]="returnDateVal" id="return-period-{{link.code}}" type="date"></div>
                                     </div>
                                     <div class="tax-filing-input-field">
                                         <div class="tax-filing-input-title">Penalties</div>
@@ -4041,7 +4059,7 @@
                                         <div class="tax-filing-input-title-title">Select your tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -4079,7 +4097,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 1, null)">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'submit')">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, link.code + '-submit')">Next</div>
                                     </div>
                                 </div>
                             </div>
@@ -4092,7 +4110,7 @@
                                         <div class="tax-filing-input-title">Return Period</div>
                                     </div>
                                     <div class="tax-filing-input-field">
-                                        <div><input class="form-input taxfiling-form date" id="return-period-{{link.code}}" type="date"></div>
+                                        <div><input class="form-input taxfiling-form date" [(ngModel)]="returnDateVal" id="return-period-{{link.code}}" type="date"></div>
                                     </div>
                                     <div class="tax-filing-input-field">
                                         <div class="tax-filing-input-title">Penalties</div>
@@ -4119,7 +4137,7 @@
                                         <div class="tax-filing-input-title-title">Select your tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -4157,7 +4175,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 1, null)">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'submit')">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, link.code + '-submit')">Next</div>
                                     </div>
                                 </div>
                             </div>
@@ -4170,7 +4188,7 @@
                                         <div class="tax-filing-input-title">Return Period</div>
                                     </div>
                                     <div class="tax-filing-input-field">
-                                        <div><input class="form-input taxfiling-form date" id="return-period-{{link.code}}" type="date"></div>
+                                        <div><input class="form-input taxfiling-form date" [(ngModel)]="returnDateVal" id="return-period-{{link.code}}" type="date"></div>
                                     </div>
                                     <div class="tax-filing-input-field">
                                         <div class="tax-filing-input-title">Total Net Gifts Subject to Tax</div>
@@ -4211,7 +4229,7 @@
                                         <div class="tax-filing-input-title-title">Select your tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -4249,7 +4267,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 1, null)">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'submit')">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, link.code + '-submit')">Next</div>
                                     </div>
                                 </div>
                             </div>
@@ -4317,7 +4335,7 @@
                                         <div class="tax-filing-input-title">Return Period</div>
                                     </div>
                                     <div class="tax-filing-input-field">
-                                        <div><input class="form-input taxfiling-form date" id="return-period-{{link.code}}" type="date"></div>
+                                        <div><input class="form-input taxfiling-form date" [(ngModel)]="returnDateVal" id="return-period-{{link.code}}" type="date"></div>
                                     </div>
                                     <div class="tax-filing-input-field">
                                         <div class="tax-filing-input-title">Net Taxable Estate</div>
@@ -4358,7 +4376,7 @@
                                         <div class="tax-filing-input-title-title">Select your tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -4396,7 +4414,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 1, null)">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'submit')">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, link.code + '-submit')">Next</div>
                                     </div>
                                 </div>
                             </div>
@@ -4409,7 +4427,7 @@
                                         <div class="tax-filing-input-title">Return Period</div>
                                     </div>
                                     <div class="tax-filing-input-field">
-                                        <div><input class="form-input taxfiling-form date" id="return-period-{{link.code}}" type="date"></div>
+                                        <div><input class="form-input taxfiling-form date" [(ngModel)]="returnDateVal" id="return-period-{{link.code}}" type="date"></div>
                                     </div>
                                     <div class="tax-filing-input-field">
                                         <div class="tax-filing-input-title">Penalties</div>
@@ -4450,7 +4468,7 @@
                                         <div class="tax-filing-input-title-title">Select your tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -4488,7 +4506,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 1, null)">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'submit')">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, link.code + '-submit')">Next</div>
                                     </div>
                                 </div>
                             </div>
@@ -4502,7 +4520,7 @@
                                         <div class="tax-filing-input-title">Return Period</div>
                                     </div>
                                     <div class="tax-filing-input-field">
-                                        <div><input class="form-input taxfiling-form date" id="return-period-{{link.code}}" type="date"></div>
+                                        <div><input class="form-input taxfiling-form date" [(ngModel)]="returnDateVal" id="return-period-{{link.code}}" type="date"></div>
                                     </div>
                                     <div class="tax-filing-input-field">
                                         <div class="tax-filing-input-title">Penalties</div>
@@ -4543,7 +4561,7 @@
                                         <div class="tax-filing-input-title-title">Select your tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -4581,7 +4599,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 1, null)">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'submit')">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, link.code + '-submit')">Next</div>
                                     </div>
                                 </div>
                             </div>
@@ -4594,7 +4612,7 @@
                                         <div class="tax-filing-input-title">Return Period</div>
                                     </div>
                                     <div class="tax-filing-input-field">
-                                        <div><input class="form-input taxfiling-form date" id="return-period-{{link.code}}" type="date"></div>
+                                        <div><input class="form-input taxfiling-form date" [(ngModel)]="returnDateVal" id="return-period-{{link.code}}" type="date"></div>
                                     </div>
                                     <div class="tax-filing-input-field">
                                         <div class="tax-filing-input-title">Penalties</div>
@@ -4635,7 +4653,7 @@
                                         <div class="tax-filing-input-title-title">Select your tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -4673,7 +4691,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 1, null)">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'submit')">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, link.code + '-submit')">Next</div>
                                     </div>
                                 </div>
                             </div>
@@ -4686,7 +4704,7 @@
                                         <div class="tax-filing-input-title">Return Period</div>
                                     </div>
                                     <div class="tax-filing-input-field">
-                                        <div><input class="form-input taxfiling-form date" id="return-period-{{link.code}}" type="date"></div>
+                                        <div><input class="form-input taxfiling-form date" [(ngModel)]="returnDateVal" id="return-period-{{link.code}}" type="date"></div>
                                     </div>
                                     <div class="tax-filing-input-field">
                                         <div class="tax-filing-input-title">Penalties</div>
@@ -4727,7 +4745,7 @@
                                         <div class="tax-filing-input-title-title">Select your tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -4765,7 +4783,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 1, null)">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'submit')">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, link.code + '-submit')">Next</div>
                                     </div>
                                 </div>
                             </div>
@@ -4778,7 +4796,7 @@
                                         <div class="tax-filing-input-title">Return Period</div>
                                     </div>
                                     <div class="tax-filing-input-field">
-                                        <div><input class="form-input taxfiling-form date" id="return-period-{{link.code}}" type="date"></div>
+                                        <div><input class="form-input taxfiling-form date" [(ngModel)]="returnDateVal" id="return-period-{{link.code}}" type="date"></div>
                                     </div>
                                     <div class="tax-filing-input-field">
                                         <div class="tax-filing-input-title">Penalties</div>
@@ -4819,7 +4837,7 @@
                                         <div class="tax-filing-input-title-title">Select your tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -4857,7 +4875,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 1, null)">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'submit')">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, link.code + '-submit')">Next</div>
                                     </div>
                                 </div>
                             </div>
@@ -4870,7 +4888,7 @@
                                         <div class="tax-filing-input-title">Return Period</div>
                                     </div>
                                     <div class="tax-filing-input-field">
-                                        <div><input class="form-input taxfiling-form date" id="return-period-{{link.code}}" type="date"></div>
+                                        <div><input class="form-input taxfiling-form date" [(ngModel)]="returnDateVal" id="return-period-{{link.code}}" type="date"></div>
                                     </div>
                                     <div class="tax-filing-input-field">
                                         <div class="tax-filing-input-title">Penalties</div>
@@ -4911,7 +4929,7 @@
                                         <div class="tax-filing-input-title-title">Select your tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -4949,7 +4967,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 1, null)">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'submit')">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, link.code + '-submit')">Next</div>
                                     </div>
                                 </div>
                             </div>
@@ -4962,7 +4980,7 @@
                                         <div class="tax-filing-input-title">Return Period</div>
                                     </div>
                                     <div class="tax-filing-input-field">
-                                        <div><input class="form-input taxfiling-form date" id="return-period-{{link.code}}" type="date"></div>
+                                        <div><input class="form-input taxfiling-form date" [(ngModel)]="returnDateVal" id="return-period-{{link.code}}" type="date"></div>
                                     </div>
                                     <div class="tax-filing-input-field">
                                         <div class="tax-filing-input-title">Penalties</div>
@@ -5003,7 +5021,7 @@
                                         <div class="tax-filing-input-title-title">Select your tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -5041,7 +5059,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 1, null)">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'submit')">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, link.code + '-submit')">Next</div>
                                     </div>
                                 </div>
                             </div>
@@ -5054,7 +5072,7 @@
                                         <div class="tax-filing-input-title">Return Period</div>
                                     </div>
                                     <div class="tax-filing-input-field">
-                                        <div><input class="form-input taxfiling-form date" id="return-period-{{link.code}}" type="date"></div>
+                                        <div><input class="form-input taxfiling-form date" [(ngModel)]="returnDateVal" id="return-period-{{link.code}}" type="date"></div>
                                     </div>
                                     <div class="tax-filing-input-field">
                                         <div class="tax-filing-input-title">Penalties</div>
@@ -5095,7 +5113,7 @@
                                         <div class="tax-filing-input-title-title">Select your tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -5133,7 +5151,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 1, null)">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'submit')">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, link.code + '-submit')">Next</div>
                                     </div>
                                 </div>
                             </div>
@@ -5146,7 +5164,7 @@
                                         <div class="tax-filing-input-title">Return Period</div>
                                     </div>
                                     <div class="tax-filing-input-field">
-                                        <div><input class="form-input taxfiling-form date" id="return-period-{{link.code}}" type="date"></div>
+                                        <div><input class="form-input taxfiling-form date" [(ngModel)]="returnDateVal" id="return-period-{{link.code}}" type="date"></div>
                                     </div>
                                     <div class="tax-filing-input-field">
                                         <div class="tax-filing-input-title">Penalties</div>
@@ -5187,7 +5205,7 @@
                                         <div class="tax-filing-input-title-title">Select your tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -5225,7 +5243,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 1, null)">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'submit')">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, link.code + '-submit')">Next</div>
                                     </div>
                                 </div>
                             </div>
@@ -5238,7 +5256,7 @@
                                         <div class="tax-filing-input-title">Return Period</div>
                                     </div>
                                     <div class="tax-filing-input-field">
-                                        <div><input class="form-input taxfiling-form date" id="return-period-{{link.code}}" type="date"></div>
+                                        <div><input class="form-input taxfiling-form date" [(ngModel)]="returnDateVal" id="return-period-{{link.code}}" type="date"></div>
                                     </div>
                                     <div class="tax-filing-input-field">
                                         <div class="tax-filing-input-title">Penalties</div>
@@ -5279,7 +5297,7 @@
                                         <div class="tax-filing-input-title-title">Select your tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -5317,7 +5335,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 1, null)">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'submit')">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, link.code + '-submit')">Next</div>
                                     </div>
                                 </div>
                             </div>
@@ -5330,7 +5348,7 @@
                                         <div class="tax-filing-input-title">Return Period</div>
                                     </div>
                                     <div class="tax-filing-input-field">
-                                        <div><input class="form-input taxfiling-form date" id="return-period-{{link.code}}" type="date"></div>
+                                        <div><input class="form-input taxfiling-form date" [(ngModel)]="returnDateVal" id="return-period-{{link.code}}" type="date"></div>
                                     </div>
                                     <div class="tax-filing-input-field">
                                         <div class="tax-filing-input-title">Penalties</div>
@@ -5371,7 +5389,7 @@
                                         <div class="tax-filing-input-title-title">Select your tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -5409,7 +5427,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 1, null)">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'submit')">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, link.code + '-submit')">Next</div>
                                     </div>
                                 </div>
                             </div>
@@ -5422,7 +5440,7 @@
                                         <div class="tax-filing-input-title">Return Period</div>
                                     </div>
                                     <div class="tax-filing-input-field">
-                                        <div><input class="form-input taxfiling-form date" id="return-period-{{link.code}}" type="date"></div>
+                                        <div><input class="form-input taxfiling-form date" [(ngModel)]="returnDateVal" id="return-period-{{link.code}}" type="date"></div>
                                     </div>
                                     <div class="tax-filing-input-field">
                                         <div class="tax-filing-input-title">Penalties</div>
@@ -5463,7 +5481,7 @@
                                         <div class="tax-filing-input-title-title">Select your tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -5501,7 +5519,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 1, null)">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'submit')">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, link.code + '-submit')">Next</div>
                                     </div>
                                 </div>
                             </div>
@@ -5514,7 +5532,7 @@
                                         <div class="tax-filing-input-title">Return Period</div>
                                     </div>
                                     <div class="tax-filing-input-field">
-                                        <div><input class="form-input taxfiling-form date" id="return-period-{{link.code}}" type="date"></div>
+                                        <div><input class="form-input taxfiling-form date" [(ngModel)]="returnDateVal" id="return-period-{{link.code}}" type="date"></div>
                                     </div>
                                     <div class="tax-filing-input-field">
                                         <div class="tax-filing-input-title">Penalties</div>
@@ -5555,7 +5573,7 @@
                                         <div class="tax-filing-input-title-title">Select your tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -5593,7 +5611,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 1, null)">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'submit')">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, link.code + '-submit')">Next</div>
                                     </div>
                                 </div>
                             </div>
@@ -5606,7 +5624,7 @@
                                         <div class="tax-filing-input-title">Return Period</div>
                                     </div>
                                     <div class="tax-filing-input-field">
-                                        <div><input class="form-input taxfiling-form date" id="return-period-{{link.code}}" type="date"></div>
+                                        <div><input class="form-input taxfiling-form date" [(ngModel)]="returnDateVal" id="return-period-{{link.code}}" type="date"></div>
                                     </div>
                                     <div class="tax-filing-input-field">
                                         <div class="tax-filing-input-title">Penalties</div>
@@ -5647,7 +5665,7 @@
                                         <div class="tax-filing-input-title-title">Select your tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -5685,7 +5703,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 1, null)">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'submit')">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, link.code + '-submit')">Next</div>
                                     </div>
                                 </div>
                             </div>
@@ -5698,7 +5716,7 @@
                                         <div class="tax-filing-input-title">Return Period</div>
                                     </div>
                                     <div class="tax-filing-input-field">
-                                        <div><input class="form-input taxfiling-form date" id="return-period-{{link.code}}" type="date"></div>
+                                        <div><input class="form-input taxfiling-form date" [(ngModel)]="returnDateVal" id="return-period-{{link.code}}" type="date"></div>
                                     </div>
                                     <div class="tax-filing-input-field">
                                         <div class="tax-filing-input-title">Penalties</div>
@@ -5739,7 +5757,7 @@
                                         <div class="tax-filing-input-title-title">Select your tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -5777,7 +5795,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 1, null)">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'submit')">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, link.code + '-submit')">Next</div>
                                     </div>
                                 </div>
                             </div>
@@ -5790,7 +5808,7 @@
                                         <div class="tax-filing-input-title">Return Period</div>
                                     </div>
                                     <div class="tax-filing-input-field">
-                                        <div><input class="form-input taxfiling-form date" id="return-period-{{link.code}}" type="date"></div>
+                                        <div><input class="form-input taxfiling-form date" [(ngModel)]="returnDateVal" id="return-period-{{link.code}}" type="date"></div>
                                     </div>
                                     <div class="tax-filing-input-field">
                                         <div class="tax-filing-input-title">Penalties</div>
@@ -5831,7 +5849,7 @@
                                         <div class="tax-filing-input-title-title">Select your tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -5869,7 +5887,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 1, null)">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'submit')">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, link.code + '-submit')">Next</div>
                                     </div>
                                 </div>
                             </div>
@@ -5882,7 +5900,7 @@
                                         <div class="tax-filing-input-title">Return Period</div>
                                     </div>
                                     <div class="tax-filing-input-field">
-                                        <div><input class="form-input taxfiling-form date" id="return-period-{{link.code}}" type="date"></div>
+                                        <div><input class="form-input taxfiling-form date" [(ngModel)]="returnDateVal" id="return-period-{{link.code}}" type="date"></div>
                                     </div>
                                     <div class="tax-filing-input-field">
                                         <div class="tax-filing-input-title">Penalties</div>
@@ -5923,7 +5941,7 @@
                                         <div class="tax-filing-input-title-title">Select your tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -5961,7 +5979,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 1, null)">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'submit')">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, link.code + '-submit')">Next</div>
                                     </div>
                                 </div>
                             </div>
@@ -5974,7 +5992,7 @@
                                         <div class="tax-filing-input-title">Return Period</div>
                                     </div>
                                     <div class="tax-filing-input-field">
-                                        <div><input class="form-input taxfiling-form date" id="return-period-{{link.code}}" type="date"></div>
+                                        <div><input class="form-input taxfiling-form date" [(ngModel)]="returnDateVal" id="return-period-{{link.code}}" type="date"></div>
                                     </div>
                                     <div class="tax-filing-input-field">
                                         <div class="tax-filing-input-title">Penalties</div>
@@ -6015,7 +6033,7 @@
                                         <div class="tax-filing-input-title-title">Select your tax payer profile by tax payer registered name</div>
                                     </div>
                                     <div class="tax-filing-input-field dropdown-header taxfiling">
-                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails($event.target.value)">
+                                        <select id="taxpayerProfile-list" class="dropdown-header taxfiling" (change)="getTaxProfileDetails(1, $event.target.value)">
                                             <option *ngFor="let taxpayerProfile of taxpayerProfile" [value]="taxpayerProfile.taxpayerName">{{taxpayerProfile.taxpayerName}}</option>
                                         </select>
                                     </div>
@@ -6053,7 +6071,7 @@
                                     </div>
                                     <div class="navigation-buttons">
                                         <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 1, null)">Back</div>
-                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, 'submit')">Next</div>
+                                        <div class="navigation-buttons-btn" (click)="navigateInnerPage(link, 0, link.code + '-submit')">Next</div>
                                     </div>
                                 </div>
                             </div>

@@ -1226,12 +1226,27 @@ export class MainuserinterfaceComponent implements OnInit {
     email:'',
   };
 
+  public taxpayerDetails1: any = {
+    taxpayerName:'',
+    taxpayerType:'',
+    tinid:'',
+    rdoCode:'',
+    taxpayerAddress:'',
+    zipcode:'',
+    contactNumber:'',
+    email:'',
+  };
+  returnDateVal: string;
+  RecentFilingDataReady: any = false;
+
   constructor(private taxfilingservice : TaxfilingService,
     private router: Router) {
       this.rdolist = this.taxfilingservice.RDO;
      }
 
   ngOnInit() {
+    this.taxpayerDetails = [];
+    this.taxpayerDetails1 = [];
     this.onGetStarted = this.taxfilingservice.onGetStarted;
     this.sid = this.taxfilingservice.getCookie('sidClient');
     if(this.sid == "") {
@@ -1289,6 +1304,8 @@ export class MainuserinterfaceComponent implements OnInit {
         this.activeBookeeping = false;
         this.activeTaxFiling = false;
         this.activeReports = false;
+
+        this.dashboardRecentFilingList();
         break;
       case "bookeeping":
         this.activeDashboard = false;
@@ -1833,9 +1850,22 @@ export class MainuserinterfaceComponent implements OnInit {
     }
 
     link.pages[page] = true;
-    if(formName == 'submit'){
-      let refID = this.sid + '-' + this.recentFiling.length;
-      this.taxfilingservice.onSubmitTaxFiling(this.sid, JSON.stringify(this.taxpayerDetails), null, null, null, null, this.taxfilindetails1['birformno'], this.taxfilindetails1['returnperiod'],JSON.stringify(this.taxfilindetails1), refID, "Pending");
+    var step = formName.split('-');
+    if(step[1] == 'submit' || step[2] == 'submit'){
+      if(step[0] == '1701') {
+        let refID = this.sid + '-' + this.recentFiling.length;
+        this.taxfilingservice.onSubmitTaxFiling(this.sid, JSON.stringify(this.taxpayerDetails), this.taxpayerDetails1.length == 0 ? null : JSON.stringify(this.taxpayerDetails1), null, null, null, this.taxfilindetails1['birformno'], this.taxfilindetails1['returnperiod'],JSON.stringify(this.taxfilindetails1), refID, "Pending");
+        var today = new Date();
+        this.returnDateVal = today.toISOString().substr(0, 10);
+        return;
+      } else {
+        let refID = this.sid + '-' + this.recentFiling.length;
+        this.taxfilingservice.onSubmitTaxFiling(this.sid, JSON.stringify(this.taxpayerDetails), null, null, null, null, this.taxfilindetails1['birformno'], this.taxfilindetails1['returnperiod'],JSON.stringify(this.taxfilindetails1), refID, "Pending");
+        var today = new Date();
+        this.returnDateVal = today.toISOString().substr(0, 10);
+        return;
+      }
+    } else if(step[1] == 'skip'){
       return;
     }
     if(formName !== null || formName !== undefined) {
@@ -1921,7 +1951,7 @@ export class MainuserinterfaceComponent implements OnInit {
       schedATCIPARate1 = parseFloat($('#' + formName + '-input-sched-atc1-tax-rate').val()), 
       schedATCIPARate2 = parseFloat($('#' + formName + '-input-sched-atc2-tax-rate').val()),
       schedATCIPARate3 = parseFloat($('#' + formName + '-input-sched-atc3-tax-rate').val()),
-      returnPeriod = $('#return-period-' + formName).val();      
+      returnPeriod = this.returnDateVal;      
       switch (formName) {
         case '0605' :
           this.penaltyValue = 0;
@@ -2156,7 +2186,7 @@ export class MainuserinterfaceComponent implements OnInit {
                 'birformno': formName,
                 'returnperiod' : returnPeriod,
                 'penalty' : this.penaltyValue,
-                'amountpayable': penaltiespayable,
+                'amountpayable': this.amountpayable,
               }
             break;
             case '1701':
@@ -2167,7 +2197,7 @@ export class MainuserinterfaceComponent implements OnInit {
                 'birformno': formName,
                 'returnperiod' : returnPeriod,
                 'penalty' : this.penaltyValue,
-                'amountpayable': penaltiespayable,
+                'amountpayable': this.amountpayable,
               }
             break;
             case '1701A':
@@ -2178,7 +2208,7 @@ export class MainuserinterfaceComponent implements OnInit {
                 'birformno': formName,
                 'returnperiod' : returnPeriod,
                 'penalty' : this.penaltyValue,
-                'amountpayable': penaltiespayable,
+                'amountpayable': this.amountpayable,
               }
             break;
             case '1701Q':
@@ -2189,7 +2219,7 @@ export class MainuserinterfaceComponent implements OnInit {
                 'birformno': formName,
                 'returnperiod' : returnPeriod,
                 'penalty' : this.penaltyValue,
-                'amountpayable': penaltiespayable,
+                'amountpayable': this.amountpayable,
               }
             break;
             case '1702-RT':
@@ -2211,7 +2241,7 @@ export class MainuserinterfaceComponent implements OnInit {
                 'birformno': formName,
                 'returnperiod' : returnPeriod,
                 'penalty' : this.penaltyValue,
-                'amountpayable': penaltiespayable,
+                'amountpayable': this.amountpayable,
               }
             break;
             case '1702-MX':
@@ -2222,7 +2252,7 @@ export class MainuserinterfaceComponent implements OnInit {
                 'birformno': formName,
                 'returnperiod' : returnPeriod,
                 'penalty' : this.penaltyValue,
-                'amountpayable': penaltiespayable,
+                'amountpayable': this.amountpayable,
               }
             break;
             case '1702Q':
@@ -2233,7 +2263,7 @@ export class MainuserinterfaceComponent implements OnInit {
                 'birformno': formName,
                 'returnperiod' : returnPeriod,
                 'penalty' : this.penaltyValue,
-                'amountpayable': penaltiespayable,
+                'amountpayable': this.amountpayable,
               }
             break;
           case '1704':
@@ -2293,7 +2323,7 @@ export class MainuserinterfaceComponent implements OnInit {
                 'birformno': formName,
                 'returnperiod' : returnPeriod,
                 'penalty' : this.penaltyValue,
-                'amountpayable': penaltiespayable,
+                'amountpayable': this.amountpayable,
               }
             break;
             case '2000':
@@ -2304,7 +2334,7 @@ export class MainuserinterfaceComponent implements OnInit {
                 'birformno': formName,
                 'returnperiod' : returnPeriod,
                 'penalty' : this.penaltyValue,
-                'amountpayable': penaltiespayable,
+                'amountpayable': this.amountpayable,
               }
             break;
             case '2200-A':
@@ -2315,7 +2345,7 @@ export class MainuserinterfaceComponent implements OnInit {
                 'birformno': formName,
                 'returnperiod' : returnPeriod,
                 'penalty' : this.penaltyValue,
-                'amountpayable': penaltiespayable,
+                'amountpayable': this.amountpayable,
               }
             break;
             case '2200-AN':
@@ -2326,7 +2356,7 @@ export class MainuserinterfaceComponent implements OnInit {
                 'birformno': formName,
                 'returnperiod' : returnPeriod,
                 'penalty' : this.penaltyValue,
-                'balancetobecarriedover': penaltiespayable,
+                'balancetobecarriedover': this.amountpayable,
               }
             break;
             case '2200-C':
@@ -2337,7 +2367,7 @@ export class MainuserinterfaceComponent implements OnInit {
                 'birformno': formName,
                 'returnperiod' : returnPeriod,
                 'penalty' : this.penaltyValue,
-                'balancetobecarriedover': penaltiespayable,
+                'balancetobecarriedover': this.amountpayable,
               }
             break;
             case '2200-M':
@@ -2348,7 +2378,7 @@ export class MainuserinterfaceComponent implements OnInit {
                 'birformno': formName,
                 'returnperiod' : returnPeriod,
                 'penalty' : this.penaltyValue,
-                'balancetobecarriedover': penaltiespayable,
+                'balancetobecarriedover': this.amountpayable,
               }
             break;
             case '2200-P':
@@ -2359,7 +2389,7 @@ export class MainuserinterfaceComponent implements OnInit {
                 'birformno': formName,
                 'returnperiod' : returnPeriod,
                 'penalty' : this.penaltyValue,
-                'balancetobecarriedover': penaltiespayable,
+                'balancetobecarriedover': this.amountpayable,
               }
             break;
             case '2200-S':
@@ -2370,7 +2400,7 @@ export class MainuserinterfaceComponent implements OnInit {
                 'birformno': formName,
                 'returnperiod' : returnPeriod,
                 'penalty' : this.penaltyValue,
-                'balancetobecarriedover': penaltiespayable,
+                'balancetobecarriedover': this.amountpayable,
               }
             break;
             case '2200-T':
@@ -2381,7 +2411,7 @@ export class MainuserinterfaceComponent implements OnInit {
                 'birformno': formName,
                 'returnperiod' : returnPeriod,
                 'penalty' : this.penaltyValue,
-                'balancetobecarriedover': penaltiespayable,
+                'balancetobecarriedover': this.amountpayable,
               }
             break;
             case '2304':
@@ -2392,7 +2422,7 @@ export class MainuserinterfaceComponent implements OnInit {
                 'birformno': formName,
                 'returnperiod' : returnPeriod,
                 'penalty' : this.penaltyValue,
-                'balancetobecarriedover': penaltiespayable,
+                'taxableincome': this.amountpayable,
               }
             break;
             case '2306':
@@ -2403,7 +2433,7 @@ export class MainuserinterfaceComponent implements OnInit {
                 'birformno': formName,
                 'returnperiod' : returnPeriod,
                 'penalty' : this.penaltyValue,
-                'balancetobecarriedover': penaltiespayable,
+                'amountpayable': this.amountpayable,
               }
             break;
             case '2307':
@@ -2414,7 +2444,7 @@ export class MainuserinterfaceComponent implements OnInit {
                 'birformno': formName,
                 'returnperiod' : returnPeriod,
                 'penalty' : this.penaltyValue,
-                'balancetobecarriedover': penaltiespayable,
+                'amountpayable': this.amountpayable,
               }
             break;
             case '2316':
@@ -2425,7 +2455,7 @@ export class MainuserinterfaceComponent implements OnInit {
                 'birformno': formName,
                 'returnperiod' : returnPeriod,
                 'penalty' : this.penaltyValue,
-                'balancetobecarriedover': penaltiespayable,
+                'taxableincome': this.amountpayable,
               }
             break;
             case '2550M':
@@ -2436,7 +2466,7 @@ export class MainuserinterfaceComponent implements OnInit {
                 'birformno': formName,
                 'returnperiod' : returnPeriod,
                 'penalty' : this.penaltyValue,
-                'balancetobecarriedover': penaltiespayable,
+                'amountpayable': this.amountpayable,
               }
             break;
             case '2550Q':
@@ -2447,7 +2477,7 @@ export class MainuserinterfaceComponent implements OnInit {
                 'birformno': formName,
                 'returnperiod' : returnPeriod,
                 'penalty' : this.penaltyValue,
-                'balancetobecarriedover': penaltiespayable,
+                'amountpayable': this.amountpayable,
               }
             break;
             case '2551Q':
@@ -2458,7 +2488,7 @@ export class MainuserinterfaceComponent implements OnInit {
                 'birformno': formName,
                 'returnperiod' : returnPeriod,
                 'penalty' : this.penaltyValue,
-                'balancetobecarriedover': penaltiespayable,
+                'amountpayable': this.amountpayable,
               }
             break;
             case '2552':
@@ -2469,7 +2499,7 @@ export class MainuserinterfaceComponent implements OnInit {
                 'birformno': formName,
                 'returnperiod' : returnPeriod,
                 'penalty' : this.penaltyValue,
-                'balancetobecarriedover': penaltiespayable,
+                'amountpayable': this.amountpayable,
               }
             break;
             case '2553':
@@ -2480,7 +2510,7 @@ export class MainuserinterfaceComponent implements OnInit {
                 'birformno': formName,
                 'returnperiod' : returnPeriod,
                 'penalty' : this.penaltyValue,
-                'balancetobecarriedover': penaltiespayable,
+                'amountpayable': this.amountpayable,
               }
             break;
       }
@@ -2563,6 +2593,7 @@ export class MainuserinterfaceComponent implements OnInit {
 
       if(this.taxpayerProfile.length !== 0) {
         this.taxpayerDetails = this.taxpayerProfile[0];
+        this.taxpayerDetails1 = this.taxpayerProfile[0];
         this.onGetStarted = false;
         this.taxfilingservice.onGetStarted = false;
         $('.main-tax-filing-container.successNextPageTrigger').css('display', 'none');
@@ -2571,20 +2602,35 @@ export class MainuserinterfaceComponent implements OnInit {
         this.taxfilingservice.onGetStarted = true;
       }
 
-      let dateInput = $('.form-input.taxfiling-form.date');
+      // let dateInput = $('.form-input.taxfiling-form.date');
+      // var today = new Date();
+      // for(let i = 0; i < dateInput.length; i++){
+      //   dateInput[i]["value"] = today.toISOString().substr(0, 10);
+      // }
+
       var today = new Date();
-      for(let i = 0; i < dateInput.length; i++){
-        dateInput[i]["value"] = today.toISOString().substr(0, 10);
-      }
+      this.returnDateVal = today.toISOString().substr(0, 10);
     });
   }
 
-  getTaxProfileDetails(data) {
-    this.taxpayerDetails = [];
-    var searchValue = this.taxpayerProfile.filter(function(value) {
-      return value["taxpayerName"] == data;
-    });
-    this.taxpayerDetails = searchValue[0];
+  getTaxProfileDetails(type, data) {
+    switch (type) {
+      case 1:
+        this.taxpayerDetails = [];
+        var searchValue = this.taxpayerProfile.filter(function(value) {
+          return value["taxpayerName"] == data;
+        });
+
+        this.taxpayerDetails = searchValue[0];
+        break;
+      case 2:
+        this.taxpayerDetails1 = [];
+        var searchValue2 = this.taxpayerProfile.filter(function(value) {
+          return value["taxpayerName"] == data;
+        });
+        this.taxpayerDetails1 = searchValue2[0];
+        break;
+    }
   }
 
   dashboardTaxProfileBth(nav) {
@@ -2603,6 +2649,8 @@ export class MainuserinterfaceComponent implements OnInit {
 
   dashboardRecentFilingList() {
     let username = this.sid;
+    let dataReady = false;
+    this.recentFiling = [];
     this.taxfilingservice.getTaxFilingRecords()
     .subscribe(res=> { 
       let logRecentFiling = res.filter(function(value){
@@ -2629,8 +2677,9 @@ export class MainuserinterfaceComponent implements OnInit {
   
         this.recentFiling.push(tempRecentFiling);
       }
-
+      this.RecentFilingDataReady = true;
     });
+
   }
 
   recentFilingAccordionToggle(data) {

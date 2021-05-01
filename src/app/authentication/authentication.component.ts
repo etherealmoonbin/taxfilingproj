@@ -111,16 +111,22 @@ export class AuthenticationComponent implements OnInit {
     } else {
       for (var i = defLength; i > 0; --i) result += num[Math.floor(Math.random() * num.length)];
       this.taxfilingservice.getAuth().subscribe(data => { 
-        let dataexist = data.find(function(value){
-          return value["username"] == result;
-        });
-
-        if(dataexist) {
-          this.autoGenerateAlphaNumeric(false);
-        } else {
+        if(data !== null) {
+          let dataexist = data.find(function(value){
+            return value["username"] == result;
+          });
+  
+          if(dataexist) {
+            this.autoGenerateAlphaNumeric(false);
+          } else {
+            this.availableUsername = result;
+            return result;
+          }
+        } else  {
           this.availableUsername = result;
           return result;
         }
+
       });
     }
   }
